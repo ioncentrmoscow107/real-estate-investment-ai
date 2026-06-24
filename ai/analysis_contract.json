@@ -1,0 +1,9 @@
+{
+  "investment_thesis": "string",
+  "key_risks": ["string"],
+  "tenant_quality": "string",
+  "location_liquidity": "string",
+  "human_verification_questions": ["string"],
+  "score": 0
+}
+

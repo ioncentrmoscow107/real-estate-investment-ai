@@ -62,6 +62,14 @@ The CIAN adapter does not perform production scraping. It is intentionally a
 stub that supports mock/sample payload normalization until a compliant public,
 import, or API-compatible data path is approved.
 
+## Investment Scoring v1
+
+Rule-based investment scoring lives in `backend/app/services/acquisition/scoring.py`.
+It calculates investment, liquidity, risk, fake, and data quality scores without
+calling OpenAI. The scorer is intentionally skeptical: missing data, weak power,
+no federal tenant, suspicious pricing, repair needs, and long exposure are all
+surfaced as explicit disadvantages or risks.
+
 ## Project Structure
 
 ```text

@@ -1,0 +1,254 @@
+{
+  "version": "property_intelligence_v1",
+  "score_defaults": {
+    "investment_score": 50,
+    "liquidity_score": 50,
+    "tenant_score": 50,
+    "building_score": 50,
+    "location_score": 50,
+    "risk_score": 20,
+    "fake_score": 10,
+    "data_quality_score": 100
+  },
+  "recommendation_thresholds": {
+    "buy_min_investment_score": 75,
+    "buy_max_risk_score": 45,
+    "buy_max_fake_score": 35,
+    "buy_min_data_quality_score": 70,
+    "avoid_max_investment_score": 49,
+    "avoid_min_risk_score": 70,
+    "avoid_min_fake_score": 60,
+    "avoid_max_data_quality_score": 44
+  },
+  "rules": [
+    {
+      "id": "price_missing",
+      "conditions": [{"field": "price_rub", "operator": "missing"}],
+      "score_adjustments": {"data_quality_score": -12, "investment_score": -8, "risk_score": 8},
+      "missing_information": ["price_rub"],
+      "disadvantages": ["Price is missing."],
+      "risks": ["Cannot assess entry price without asking price."],
+      "due_diligence": ["Request confirmed asking price and sale terms."],
+      "explanations": {"data_quality_score": "Price is missing, reducing data quality."}
+    },
+    {
+      "id": "area_missing",
+      "conditions": [{"field": "area_sqm", "operator": "missing"}],
+      "score_adjustments": {"data_quality_score": -10, "investment_score": -6, "risk_score": 6},
+      "missing_information": ["area_sqm"],
+      "disadvantages": ["Area is missing."],
+      "risks": ["Cannot validate price per sqm without area."],
+      "due_diligence": ["Request official area confirmation from title or floor plan."],
+      "explanations": {"data_quality_score": "Area is missing, so unit economics are incomplete."}
+    },
+    {
+      "id": "price_per_sqm_missing",
+      "conditions": [{"field": "price_per_sqm", "operator": "missing"}],
+      "score_adjustments": {"data_quality_score": -8, "investment_score": -4},
+      "missing_information": ["price_per_sqm"],
+      "disadvantages": ["Price per sqm is missing."],
+      "due_diligence": ["Calculate price per sqm after confirming price and area."],
+      "explanations": {"data_quality_score": "Price per sqm is unavailable."}
+    },
+    {
+      "id": "address_missing",
+      "conditions": [{"field": "address", "operator": "missing"}],
+      "score_adjustments": {"data_quality_score": -12, "fake_score": 18, "risk_score": 8, "location_score": -15},
+      "missing_information": ["address"],
+      "disadvantages": ["Exact address is missing."],
+      "risks": ["Address omission increases fake or misleading listing risk."],
+      "due_diligence": ["Request exact address and verify building identity."],
+      "explanations": {
+        "fake_score": "Missing address is a strong fake-listing signal.",
+        "location_score": "Location cannot be assessed reliably without address."
+      }
+    },
+    {
+      "id": "coordinates_available",
+      "conditions": [
+        {"field": "latitude", "operator": "present"},
+        {"field": "longitude", "operator": "present"}
+      ],
+      "score_adjustments": {"location_score": 8, "data_quality_score": 3},
+      "advantages": ["Coordinates are available for location verification."],
+      "explanations": {"location_score": "Coordinates allow stronger location validation."}
+    },
+    {
+      "id": "first_floor",
+      "conditions": [{"field": "floor", "operator": "eq", "value": 1}],
+      "score_adjustments": {"liquidity_score": 18, "investment_score": 8, "risk_score": -5},
+      "advantages": ["First floor improves retail liquidity."],
+      "explanations": {
+        "liquidity_score": "First floor is preferred for street retail and customer access.",
+        "investment_score": "First floor supports stronger leasing and resale demand."
+      }
+    },
+    {
+      "id": "not_first_floor",
+      "conditions": [{"field": "floor", "operator": "neq", "value": 1}],
+      "score_adjustments": {"liquidity_score": -20, "investment_score": -12, "risk_score": 14},
+      "disadvantages": ["Property is not on the first floor."],
+      "risks": ["Higher floor may reduce tenant demand and investor liquidity."],
+      "due_diligence": ["Confirm actual floor and independent street access."],
+      "explanations": {"liquidity_score": "Non-first-floor retail is less liquid."}
+    },
+    {
+      "id": "new_building",
+      "conditions": [{"field": "building_year", "operator": "gte", "value": 2020}],
+      "score_adjustments": {"building_score": 22, "investment_score": 8, "risk_score": -4},
+      "advantages": ["Building is modern, commissioned in 2020 or later."],
+      "explanations": {"building_score": "A 2020+ building receives a strong building score uplift."}
+    },
+    {
+      "id": "mvp_building_year",
+      "conditions": [
+        {"field": "building_year", "operator": "gte", "value": 2016},
+        {"field": "building_year", "operator": "lt", "value": 2020}
+      ],
+      "score_adjustments": {"building_score": 14, "investment_score": 5},
+      "advantages": ["Building meets the 2016+ MVP criterion."],
+      "explanations": {"building_score": "Building year meets the platform's minimum criterion."}
+    },
+    {
+      "id": "old_building",
+      "conditions": [{"field": "building_year", "operator": "lt", "value": 2016}],
+      "score_adjustments": {"building_score": -22, "investment_score": -12, "risk_score": 14},
+      "disadvantages": ["Building is older than the target criterion."],
+      "risks": ["Older building may carry technical, capex, or liquidity risks."],
+      "due_diligence": ["Inspect engineering systems, facade, common areas, and capex history."],
+      "explanations": {"building_score": "Building year is below 2016."}
+    },
+    {
+      "id": "federal_tenant",
+      "conditions": [{"field": "has_federal_tenant", "operator": "eq", "value": true}],
+      "score_adjustments": {"tenant_score": 30, "liquidity_score": 14, "investment_score": 14, "risk_score": -8, "fake_score": -5},
+      "advantages": ["Federal tenant improves income reliability."],
+      "due_diligence": ["Verify lease agreement, tenant entity, rent, indexation, and break options."],
+      "explanations": {
+        "tenant_score": "Federal tenant materially improves tenant quality.",
+        "liquidity_score": "Federal tenant improves resale liquidity for income investors."
+      }
+    },
+    {
+      "id": "tenant_missing",
+      "conditions": [{"field": "tenant_name", "operator": "missing"}],
+      "score_adjustments": {"tenant_score": -18, "investment_score": -8, "risk_score": 10},
+      "missing_information": ["tenant_name"],
+      "disadvantages": ["Tenant is not specified."],
+      "risks": ["Vacancy or weak tenant risk is unresolved."],
+      "due_diligence": ["Confirm current occupancy and lease status."],
+      "explanations": {"tenant_score": "Tenant score is reduced because tenant identity is unknown."}
+    },
+    {
+      "id": "high_power",
+      "conditions": [{"field": "electric_power_kw", "operator": "gte", "value": 80}],
+      "score_adjustments": {"liquidity_score": 10, "investment_score": 6, "risk_score": -4},
+      "advantages": ["High electric power supports a wider tenant pool."],
+      "explanations": {"liquidity_score": "80+ kW power is attractive for retail, food, and service tenants."}
+    },
+    {
+      "id": "low_power",
+      "conditions": [{"field": "electric_power_kw", "operator": "lt", "value": 30}],
+      "score_adjustments": {"liquidity_score": -16, "investment_score": -10, "risk_score": 12},
+      "disadvantages": ["Electric power is below 30 kW."],
+      "risks": ["Low power may limit tenant categories and require capex."],
+      "due_diligence": ["Request utility capacity documents and technical connection terms."],
+      "explanations": {"liquidity_score": "Power below 30 kW reduces tenant flexibility."}
+    },
+    {
+      "id": "power_increase_possible",
+      "conditions": [{"field": "electric_power_can_be_increased", "operator": "eq", "value": true}],
+      "score_adjustments": {"liquidity_score": 8, "risk_score": -3},
+      "advantages": ["Electric power can be increased."],
+      "due_diligence": ["Verify cost, timeline, and technical feasibility of power increase."],
+      "explanations": {"liquidity_score": "Power increase option improves leasing flexibility."}
+    },
+    {
+      "id": "power_missing",
+      "conditions": [{"field": "electric_power_kw", "operator": "missing"}],
+      "score_adjustments": {"data_quality_score": -12, "liquidity_score": -8, "risk_score": 10},
+      "missing_information": ["electric_power_kw"],
+      "disadvantages": ["Electric power is not specified."],
+      "risks": ["Cannot confirm whether power is sufficient for target tenants."],
+      "due_diligence": ["Request confirmed allocated electric power in kW."],
+      "explanations": {"data_quality_score": "Missing power data weakens investment confidence."}
+    },
+    {
+      "id": "no_repair",
+      "conditions": [{"field": "repair_condition", "operator": "in", "value": ["none", "no_repair", "needs_repair", "shell_core"]}],
+      "score_adjustments": {"investment_score": -10, "risk_score": 10, "liquidity_score": -5},
+      "disadvantages": ["Repair or fit-out investment is likely required."],
+      "risks": ["Capex may be higher than advertised."],
+      "due_diligence": ["Estimate fit-out capex and timeline before offer."],
+      "explanations": {"investment_score": "No repair or shell condition reduces near-term investment quality."}
+    },
+    {
+      "id": "quality_repair",
+      "conditions": [{"field": "repair_condition", "operator": "in", "value": ["quality_repair", "has_repair"]}],
+      "score_adjustments": {"investment_score": 5, "liquidity_score": 4},
+      "advantages": ["Existing repair can reduce launch capex."],
+      "explanations": {"investment_score": "Existing repair improves readiness for use."}
+    },
+    {
+      "id": "suspicious_low_price",
+      "conditions": [{"field": "price_per_sqm", "operator": "lt", "value": 250000}],
+      "score_adjustments": {"fake_score": 28, "risk_score": 12, "investment_score": -12},
+      "risks": ["Suspiciously low price per sqm requires verification."],
+      "due_diligence": ["Check ownership, encumbrances, listing authenticity, and actual sale price."],
+      "explanations": {"fake_score": "Very low price per sqm is treated as a fake or misleading listing signal."}
+    },
+    {
+      "id": "price_target_range",
+      "conditions": [
+        {"field": "price_rub", "operator": "gte", "value": 100000000},
+        {"field": "price_rub", "operator": "lte", "value": 400000000}
+      ],
+      "score_adjustments": {"investment_score": 5, "liquidity_score": 5},
+      "advantages": ["Price is within the target MVP range."],
+      "explanations": {"investment_score": "Price matches the platform's target acquisition band."}
+    },
+    {
+      "id": "price_outside_range",
+      "conditions": [
+        {"field": "price_rub", "operator": "present"},
+        {"field": "price_rub", "operator": "not_between", "value": [100000000, 400000000]}
+      ],
+      "score_adjustments": {"investment_score": -10, "liquidity_score": -8, "risk_score": 8},
+      "disadvantages": ["Price is outside the target MVP range."],
+      "risks": ["Object may not fit the target investor mandate."],
+      "explanations": {"investment_score": "Price outside target range reduces mandate fit."}
+    },
+    {
+      "id": "long_exposure",
+      "conditions": [{"field": "exposure_days", "operator": "gte", "value": 90}],
+      "score_adjustments": {"liquidity_score": -12, "risk_score": 10, "investment_score": -8},
+      "disadvantages": ["Listing has long market exposure."],
+      "risks": ["Long exposure may indicate overpricing, weak demand, or hidden defects."],
+      "due_diligence": ["Ask why the asset has not sold and review previous price changes."],
+      "explanations": {"risk_score": "90+ days exposure increases marketability risk."}
+    },
+    {
+      "id": "photos_missing",
+      "conditions": [{"field": "photos_count", "operator": "eq", "value": 0}],
+      "score_adjustments": {"data_quality_score": -6, "fake_score": 8},
+      "missing_information": ["photos"],
+      "disadvantages": ["Photos are missing."],
+      "risks": ["No photos makes listing quality harder to verify."],
+      "due_diligence": ["Request current interior, facade, entrance, and utility photos."],
+      "explanations": {"fake_score": "Missing photos increase verification risk."}
+    },
+    {
+      "id": "seller_missing",
+      "conditions": [
+        {"field": "seller_name", "operator": "missing"},
+        {"field": "seller_phone_hash", "operator": "missing"}
+      ],
+      "score_adjustments": {"data_quality_score": -5, "fake_score": 8},
+      "missing_information": ["seller_name", "seller_phone_hash"],
+      "risks": ["Seller identity is weakly represented in normalized data."],
+      "due_diligence": ["Verify seller or agency identity before engagement."],
+      "explanations": {"fake_score": "Weak seller identity increases misleading-listing risk."}
+    }
+  ]
+}
+

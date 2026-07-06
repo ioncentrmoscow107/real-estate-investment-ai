@@ -70,6 +70,18 @@ calling OpenAI. The scorer is intentionally skeptical: missing data, weak power,
 no federal tenant, suspicious pricing, repair needs, and long exposure are all
 surfaced as explicit disadvantages or risks.
 
+## Property Intelligence Engine v1
+
+Deterministic property intelligence lives in
+`backend/app/services/acquisition/property_intelligence.py`. Editable investment
+knowledge rules are stored separately in
+`backend/app/services/acquisition/rules/property_intelligence_rules.json`.
+
+The engine returns independent investment, liquidity, tenant, building,
+location, risk, fake, and data quality scores with explanations for every score,
+plus advantages, disadvantages, risks, missing information, due diligence
+checklist, recommendation, and summary.
+
 ## Project Structure
 
 ```text

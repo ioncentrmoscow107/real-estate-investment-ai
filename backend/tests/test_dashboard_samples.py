@@ -19,8 +19,16 @@ def test_dashboard_sample_response_structure() -> None:
         "price_rub",
         "area_sqm",
         "price_per_sqm",
+        "electric_power_kw",
+        "electric_power_increase_to_kw",
+        "repair_condition",
+        "has_federal_tenant",
+        "last_updated",
         "investment_score",
         "liquidity_score",
+        "tenant_score",
+        "building_score",
+        "location_score",
         "risk_score",
         "fake_score",
         "data_quality_score",
@@ -40,6 +48,9 @@ def test_dashboard_sample_response_structure() -> None:
         for score_name in [
             "investment_score",
             "liquidity_score",
+            "tenant_score",
+            "building_score",
+            "location_score",
             "risk_score",
             "fake_score",
             "data_quality_score",
@@ -52,3 +63,30 @@ def test_dashboard_sample_response_structure() -> None:
         assert isinstance(property_item["missing_information"], list)
         assert isinstance(property_item["due_diligence_checklist"], list)
 
+
+def test_dashboard_samples_are_russian_investor_facing() -> None:
+    response = get_sample_dashboard_properties()
+
+    assert "average_risk_score" in response["summary"]
+    assert response["summary"]["recommendations"]["BUY"] >= 1
+    assert response["summary"]["recommendations"]["WATCH"] >= 1
+    assert response["summary"]["recommendations"]["AVOID"] >= 1
+
+    all_text = " ".join(
+        " ".join(
+            [
+                property_item["title"],
+                property_item["short_summary"],
+                *property_item["advantages"],
+                *property_item["disadvantages"],
+                *property_item["risks"],
+                *property_item["missing_information"],
+                *property_item["due_diligence_checklist"],
+            ]
+        )
+        for property_item in response["properties"]
+    )
+
+    assert "Федеральный арендатор" in all_text
+    assert "Проверить выписку ЕГРН" in all_text
+    assert "Не подтверждена электрическая мощность" in all_text

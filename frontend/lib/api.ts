@@ -40,8 +40,16 @@ export type DashboardProperty = {
   price_rub: number;
   area_sqm: number;
   price_per_sqm: number;
+  electric_power_kw: number | null;
+  electric_power_increase_to_kw: number | null;
+  repair_condition: string | null;
+  has_federal_tenant: boolean;
+  last_updated: string;
   investment_score: number;
   liquidity_score: number;
+  tenant_score: number;
+  building_score: number;
+  location_score: number;
   risk_score: number;
   fake_score: number;
   data_quality_score: number;
@@ -59,6 +67,7 @@ export type DashboardResponse = {
   summary: {
     total_properties: number;
     average_investment_score: number;
+    average_risk_score: number;
     recommendations: Record<Recommendation, number>;
   };
   properties: DashboardProperty[];

@@ -1,0 +1,207 @@
+# Project Status
+
+This file is the project control panel. Keep it updated after each meaningful sprint, feature, fix, or architectural change.
+
+## Current Version
+
+0.1.0
+
+Current milestone: Russian Investor Dashboard UX v2 on top of deterministic acquisition and property intelligence foundations.
+
+## Completed Sprints
+
+- Initial project scaffold.
+- Data Acquisition Pipeline v1.
+- Investment Scoring v1.
+- Property Intelligence Engine v1.
+- Dashboard v1.
+- TASK-005: Russian Investor Dashboard UX v2.
+
+## Current Sprint
+
+TASK-005 completed: Russian investor-facing Dashboard UX v2.
+
+Focus:
+
+- Keep the dashboard suitable for Russian private investors and investment groups.
+- Preserve the compliance boundary around real estate data acquisition.
+- Continue improving decision workflow without enabling production scraping prematurely.
+
+## Completed Features
+
+- FastAPI backend application with health, listings, collectors, and dashboard routes.
+- PostgreSQL schema for persisted listings.
+- Docker Compose runtime for database, backend, and frontend.
+- APScheduler-based collection interval service.
+- Collector registry with source placeholders for CIAN, Avito, Domclick, and Yandex Realty.
+- Safe source adapter contract for raw collection and normalization.
+- CIAN adapter stub with mock/sample payload normalization.
+- Normalized listing model for commercial real estate objects.
+- MVP investment filters:
+  - price from 100,000,000 RUB to 400,000,000 RUB;
+  - first floor;
+  - building year 2016 or newer;
+  - supported property types or federal tenant signal.
+- Text extraction for electric power, repair condition, and federal tenant signals.
+- Conservative deduplication confidence service.
+- Rule-based investment scoring without OpenAI API calls.
+- Deterministic Property Intelligence Engine with editable JSON rules.
+- Dashboard sample data service.
+- Investor dashboard in Next.js showing summary metrics, scores, recommendations, risks, missing information, and due diligence items.
+- Russian investor-facing dashboard UX with localized recommendation labels:
+  - `BUY` -> `Покупать`;
+  - `WATCH` -> `Изучить подробнее`;
+  - `AVOID` -> `Не рекомендую`.
+- Compact investment memo cards with key facts, strengths, risks, all score groups, missing information, and due diligence checklist.
+- Russian sample analyzed properties for realistic Moscow commercial real estate scenarios.
+- Dashboard API response includes average risk and full score set for investor details.
+- Documentation in `docs/` for architecture, operations, data acquisition, source adapters, investment scoring, property intelligence, and dashboard.
+
+## Known Issues
+
+- Production scraping is not implemented.
+- Collector placeholders currently return no real listings.
+- Dashboard v2 uses sample analyzed properties, not live database-backed analyzed properties.
+- No frontend sorting or filtering in Dashboard v2.
+- No full property analysis detail page.
+- OpenAI package and prompt assets exist, but current scoring/intelligence is deterministic and does not call OpenAI.
+- Property Intelligence rule explanations remain in English internally; the investor-facing dashboard displays Russian sample analysis text.
+- `docs/data-acquisition.md` says no background scheduler for that milestone, while the current FastAPI app starts the scheduler service on lifespan. The active collectors are stubs, so this does not currently collect real data.
+- Working tree contains generated/runtime files:
+  - backend `__pycache__/` directories;
+  - `frontend/.next/`;
+  - `frontend/node_modules/`;
+  - `frontend/package-lock.json`.
+- `frontend/next-env.d.ts` has a local generated comment change.
+
+## Next Tasks
+
+- Decide whether to commit or ignore generated frontend/backend runtime artifacts.
+- Add or update `.gitignore` rules for local generated files if needed.
+- Decide the next data source path:
+  - official API;
+  - partner feed;
+  - permitted public pages;
+  - manual or semi-automatic import.
+- Connect dashboard to persisted analyzed properties when the backend has a durable analysis store.
+- Add dashboard sorting and filtering.
+- Add a full property analysis view.
+- Localize rule explanation text if those explanations become visible in the UI.
+- Add operational logging and job metrics before enabling real collection.
+- Clarify scheduler behavior in docs versus runtime.
+- Expand tests around dashboard API contracts and frontend data assumptions.
+
+## Last Commit
+
+Pending local commit: `Polish Russian investor dashboard v1`
+
+Branch: `main`
+
+Remote tracking: `origin/main`
+
+## Repository Structure
+
+```text
+.
+|-- ai/
+|   |-- analysis_contract.json
+|   `-- prompts/
+|-- backend/
+|   |-- app/
+|   |   |-- api/
+|   |   |-- core/
+|   |   |-- db/
+|   |   |-- models/
+|   |   |-- schemas/
+|   |   `-- services/
+|   |       |-- acquisition/
+|   |       |-- ai/
+|   |       `-- collectors/
+|   `-- tests/
+|-- database/
+|   |-- migrations/
+|   `-- seeds/
+|-- docker/
+|   |-- backend/
+|   `-- frontend/
+|-- docs/
+|-- frontend/
+|   |-- app/
+|   |-- components/
+|   `-- lib/
+|-- docker-compose.yml
+|-- requirements.txt
+|-- README.md
+`-- PROJECT_STATUS.md
+```
+
+## Roadmap
+
+### Phase 1: Foundation
+
+Status: complete.
+
+- Backend scaffold.
+- Database schema.
+- Docker Compose runtime.
+- Source adapter boundaries.
+- Documentation baseline.
+
+### Phase 2: Acquisition Foundation
+
+Status: complete.
+
+- Raw listing model.
+- Normalized listing model.
+- CIAN normalization stub.
+- MVP business filters.
+- Text extraction helpers.
+- Deduplication confidence service.
+
+### Phase 3: Deterministic Analysis
+
+Status: complete.
+
+- Rule-based investment scoring.
+- Property Intelligence Engine.
+- Editable JSON rules.
+- Explanations, risks, advantages, missing information, and due diligence output.
+
+### Phase 4: Investor Dashboard
+
+Status: complete for v2 sample-data UX.
+
+- Sample analyzed properties endpoint.
+- Summary metrics.
+- Compact expandable property list.
+- Recommendation display for BUY, WATCH, and AVOID.
+- Russian investor-facing labels and sample data.
+- Compact investment memo cards.
+- Expanded score details and due diligence blocks.
+
+### Phase 5: Stabilization
+
+Status: current / next.
+
+- Clean generated artifacts from working tree.
+- Confirm `.gitignore` coverage.
+- Align docs and runtime scheduler behavior.
+- Harden API contracts and tests.
+
+### Phase 6: Real Data Path
+
+Status: planned.
+
+- Select compliant source access method.
+- Implement one approved source integration.
+- Add operational logging, metrics, retries, and rate limiting.
+- Persist normalized and analyzed properties.
+
+### Phase 7: Production Dashboard
+
+Status: planned.
+
+- Replace sample dashboard data with live analyzed properties.
+- Add sorting, filtering, and full property analysis pages.
+- Add user-facing review workflows.
+- Add export/reporting if needed.

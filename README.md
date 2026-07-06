@@ -82,6 +82,14 @@ location, risk, fake, and data quality scores with explanations for every score,
 plus advantages, disadvantages, risks, missing information, due diligence
 checklist, recommendation, and summary.
 
+## Dashboard v1
+
+The investor dashboard consumes sample analyzed properties from
+`GET /api/v1/dashboard/properties`. It shows total properties, average
+investment score, BUY / WATCH / AVOID counts, and a compact expandable list of
+all analyzed properties. Real scraping is not implemented in this dashboard
+task.
+
 ## Project Structure
 
 ```text

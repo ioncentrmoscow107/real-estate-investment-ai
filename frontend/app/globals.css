@@ -8,6 +8,9 @@
   --accent-dark: #115e59;
   --warning: #b45309;
   --good: #15803d;
+  --danger: #b91c1c;
+  --watch: #6d5d00;
+  --soft: #eef3f1;
 }
 
 * {
@@ -93,6 +96,10 @@ button {
   font-weight: 700;
 }
 
+.recommendation-counts .metric-value {
+  font-size: 22px;
+}
+
 .toolbar {
   align-items: center;
   display: flex;
@@ -119,6 +126,178 @@ button {
 
 .table-wrap {
   overflow-x: auto;
+}
+
+.dashboard-panel {
+  display: grid;
+  gap: 16px;
+}
+
+.toolbar h1 {
+  font-size: 22px;
+  margin: 0;
+}
+
+.toolbar p {
+  color: var(--muted);
+  margin: 6px 0 0;
+}
+
+.toolbar-note,
+.footer-note {
+  align-items: center;
+  color: var(--muted);
+  display: inline-flex;
+  font-size: 13px;
+  gap: 8px;
+}
+
+.footer-note {
+  border-top: 1px solid var(--line);
+  padding-top: 14px;
+}
+
+.property-list {
+  display: grid;
+  gap: 10px;
+}
+
+.property-row {
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: #ffffff;
+}
+
+.property-row summary {
+  cursor: pointer;
+  list-style: none;
+}
+
+.property-row summary::-webkit-details-marker {
+  display: none;
+}
+
+.property-main {
+  align-items: center;
+  display: grid;
+  gap: 14px;
+  grid-template-columns: minmax(220px, 1.4fr) minmax(160px, 0.8fr) minmax(320px, 1.4fr) auto;
+  min-height: 76px;
+  padding: 14px;
+}
+
+.property-title,
+.property-price {
+  display: grid;
+  gap: 5px;
+}
+
+.property-title a {
+  color: var(--foreground);
+  font-weight: 700;
+  text-decoration: none;
+}
+
+.property-title a:hover {
+  color: var(--accent);
+}
+
+.property-title span,
+.property-price span,
+.muted {
+  color: var(--muted);
+  font-size: 13px;
+}
+
+.property-scores {
+  display: grid;
+  gap: 6px;
+  grid-template-columns: repeat(5, minmax(48px, 1fr));
+}
+
+.score-pill {
+  background: var(--soft);
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  display: grid;
+  gap: 2px;
+  min-height: 44px;
+  padding: 6px 8px;
+}
+
+.score-pill span {
+  color: var(--muted);
+  font-size: 11px;
+  text-transform: uppercase;
+}
+
+.score-pill strong {
+  font-size: 16px;
+}
+
+.recommendation {
+  border-radius: 6px;
+  color: #ffffff;
+  display: inline-flex;
+  font-size: 12px;
+  font-weight: 700;
+  justify-content: center;
+  min-width: 64px;
+  padding: 7px 9px;
+}
+
+.recommendation-buy {
+  background: var(--good);
+}
+
+.recommendation-watch {
+  background: var(--watch);
+}
+
+.recommendation-avoid {
+  background: var(--danger);
+}
+
+.property-details {
+  border-top: 1px solid var(--line);
+  display: grid;
+  gap: 14px;
+  padding: 14px;
+}
+
+.summary-text {
+  margin: 0;
+}
+
+.details-grid {
+  display: grid;
+  gap: 12px;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+}
+
+.detail-block {
+  background: #fbfcfb;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: 12px;
+}
+
+.detail-block h3 {
+  font-size: 13px;
+  margin: 0 0 8px;
+}
+
+.detail-block ul {
+  display: grid;
+  gap: 6px;
+  margin: 0;
+  padding-left: 18px;
+}
+
+.detail-block li {
+  color: var(--muted);
+  font-size: 13px;
+  line-height: 1.35;
 }
 
 table {
@@ -177,6 +356,19 @@ td {
     align-items: flex-start;
     flex-direction: column;
   }
+
+  .property-main {
+    align-items: stretch;
+    grid-template-columns: 1fr;
+  }
+
+  .property-scores {
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+  }
+
+  .details-grid {
+    grid-template-columns: 1fr;
+  }
 }
 
 @media (max-width: 520px) {
@@ -184,4 +376,3 @@ td {
     grid-template-columns: 1fr;
   }
 }
-

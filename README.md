@@ -45,6 +45,23 @@ Services:
 - `GET /api/v1/collectors/status`
 - `POST /api/v1/collectors/run`
 
+## Data Acquisition Pipeline v1
+
+The v1 acquisition foundation lives in `backend/app/services/acquisition`.
+It includes the source adapter contract, a safe CIAN adapter stub, normalized
+listing fields, business filtering, conservative deduplication, and text
+extraction helpers for electric power, repair condition, and federal tenants.
+
+Run backend tests in development mode:
+
+```bash
+PYTHONPATH=backend pytest backend/tests
+```
+
+The CIAN adapter does not perform production scraping. It is intentionally a
+stub that supports mock/sample payload normalization until a compliant public,
+import, or API-compatible data path is approved.
+
 ## Project Structure
 
 ```text
@@ -55,4 +72,3 @@ ai/           AI prompt templates and analysis contract
 docs/         Engineering notes
 docker/       Dockerfiles
 ```
-

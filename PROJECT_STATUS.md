@@ -6,7 +6,7 @@ This file is the project control panel. Keep it updated after each meaningful sp
 
 0.1.0
 
-Current milestone: Property & Market Intelligence v1 on top of the Russian investor dashboard.
+Current milestone: TASK-007 Local Dev Environment Stabilization.
 
 ## Completed Sprints
 
@@ -17,18 +17,19 @@ Current milestone: Property & Market Intelligence v1 on top of the Russian inves
 - Dashboard v1.
 - TASK-005: Russian Investor Dashboard UX v2.
 - TASK-006: Property & Market Intelligence v1.
+- TASK-007: Local Dev Environment Stabilization.
 
 ## Current Sprint
 
-TASK-006: Property & Market Intelligence v1.
+TASK-007: Local Dev Environment Stabilization.
 
 Focus:
 
-- Show why each score was assigned.
-- Add property photos/placeholders, building context, surroundings, traffic, competitors, comparables, trends, residential market context, and market support conclusion.
-- Keep the dashboard suitable for Russian private investors and investment groups.
-- Preserve the compliance boundary around real estate data acquisition.
-- Continue improving decision workflow without enabling production scraping prematurely.
+- Stabilize Windows local development without changing product logic.
+- Start backend without PowerShell venv activation.
+- Start frontend with `npm.cmd`.
+- Document local URLs, tests, common port issues, and Git troubleshooting.
+- Keep generated/runtime files out of commits.
 
 ## Completed Features
 
@@ -72,6 +73,14 @@ Focus:
   - market support conclusion.
 - Dashboard v3 expanded investor dossier sections for property and market intelligence.
 - Documentation in `docs/` for architecture, operations, data acquisition, source adapters, investment scoring, property intelligence, and dashboard.
+- Windows local development scripts:
+  - `scripts/start_backend.ps1`;
+  - `scripts/start_frontend.ps1`;
+  - `scripts/check_env.ps1`;
+  - `scripts/git_status.ps1`.
+- Russian local run guide in `docs/local-run.md`.
+- README local development section with backend/frontend commands and URLs.
+- `.gitignore` coverage for Python caches, pytest cache, frontend build/runtime folders, local env files, and OS metadata.
 
 ## Known Issues
 
@@ -79,23 +88,24 @@ Focus:
 - Collector placeholders currently return no real listings.
 - Dashboard v2 uses sample analyzed properties, not live database-backed analyzed properties.
 - Property & Market Intelligence v1 uses sample/mock market data, not real external market data.
+- Real market data is still sample/mock.
+- Real scraping is not implemented.
 - Photos are CSS/sample placeholders, not real listing photos.
 - No frontend sorting or filtering in Dashboard v2.
 - No full property analysis detail page.
 - OpenAI package and prompt assets exist, but current scoring/intelligence is deterministic and does not call OpenAI.
 - Property Intelligence rule explanations remain in English internally; the investor-facing dashboard displays Russian sample analysis text.
 - `docs/data-acquisition.md` says no background scheduler for that milestone, while the current FastAPI app starts the scheduler service on lifespan. The active collectors are stubs, so this does not currently collect real data.
-- Working tree contains generated/runtime files:
+- Windows PowerShell may block `.venv\Scripts\Activate.ps1`; direct `.venv\Scripts\python.exe` commands are documented.
+- Working tree may contain generated/runtime files locally:
   - backend `__pycache__/` directories;
   - `frontend/.next/`;
-  - `frontend/node_modules/`;
-  - `frontend/package-lock.json`.
+  - `frontend/node_modules/`.
 - `frontend/next-env.d.ts` has a local generated comment change.
 
 ## Next Tasks
 
-- Decide whether to commit or ignore generated frontend/backend runtime artifacts.
-- Add or update `.gitignore` rules for local generated files if needed.
+- After environment stabilization, plan real source ingestion / CIAN adapter / data ingestion validation.
 - Decide the next data source path:
   - official API;
   - partner feed;
@@ -113,7 +123,7 @@ Focus:
 
 ## Last Commit
 
-Pending local commit: `Add property and market intelligence dashboard`
+Pending local commit: `Stabilize local development environment`
 
 Branch: `main`
 

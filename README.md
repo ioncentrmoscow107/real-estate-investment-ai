@@ -38,6 +38,29 @@ Services:
 - Backend docs: http://localhost:8000/docs
 - PostgreSQL: localhost:5432
 
+## Local Development
+
+For stable Windows local development, use the guide in
+[`docs/local-run.md`](docs/local-run.md).
+
+Start backend without activating the virtual environment:
+
+```powershell
+.\scripts\start_backend.ps1
+```
+
+Start frontend with `npm.cmd`:
+
+```powershell
+.\scripts\start_frontend.ps1
+```
+
+Local URLs:
+
+- Frontend: http://localhost:3000
+- Backend dashboard API: http://127.0.0.1:8000/api/v1/dashboard/properties
+- Backend docs: http://127.0.0.1:8000/docs
+
 ## Useful Endpoints
 
 - `GET /health`

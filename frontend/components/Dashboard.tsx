@@ -7,6 +7,8 @@ import {
   ChevronDown,
   CircleHelp,
   ClipboardCheck,
+  Link,
+  ListPlus,
   Home,
   MapPin,
   ShieldAlert,
@@ -20,6 +22,8 @@ import { getDashboardProperties } from "../lib/api";
 import type {
   DashboardProperty,
   InvestorScoreExplanation,
+  ManualIntakeBatch,
+  ManualIntakeStatus,
   MarketTrend,
   Recommendation,
 } from "../lib/api";
@@ -60,6 +64,14 @@ const photoTypeLabels: Record<string, string> = {
   surroundings: "Окружение",
   floor_plan: "Планировка",
   engineering: "Инженерия",
+};
+
+const manualStatusLabels: Record<ManualIntakeStatus, string> = {
+  draft: "Черновик",
+  queued: "Ожидает анализа",
+  processing: "Анализируется",
+  analyzed: "Проанализировано",
+  failed: "Ошибка обработки",
 };
 
 function formatRub(value: number | null) {
@@ -636,9 +648,80 @@ function PropertyCard({ property }: { property: DashboardProperty }) {
   );
 }
 
+function ManualIntakePanel({ batches }: { batches: ManualIntakeBatch[] }) {
+  return (
+    <section className="dashboard-panel manual-panel">
+      <div className="toolbar">
+        <div>
+          <h1>Ручная подборка</h1>
+          <p>
+            Ручное добавление для случаев, когда инвестор сам нашел объявления и хочет сравнить только выбранные ссылки.
+            Реальный разбор URL пока не реализован: это mock-only intake-модель для будущего анализа.
+          </p>
+        </div>
+        <div className="toolbar-note">
+          <ListPlus size={16} />
+          Добавлено вручную
+        </div>
+      </div>
+
+      <div className="manual-intake-grid">
+        <div className="manual-form">
+          <label>
+            <span>Название подборки</span>
+            <input placeholder="Например: Объекты СЗАО от инвестора" type="text" />
+          </label>
+          <label>
+            <span>Вставьте ссылки на объявления</span>
+            <textarea placeholder={"https://example.test/listing/1\nhttps://example.test/listing/2"} rows={6} />
+          </label>
+          <button type="button">Добавить в анализ</button>
+        </div>
+
+        <div className="manual-batch-list">
+          {batches.map((batch) => (
+            <article className="manual-batch-card" key={batch.id}>
+              <div className="manual-batch-head">
+                <div>
+                  <h2>{batch.name}</h2>
+                  <p>{batch.description}</p>
+                </div>
+                <span className={`manual-status manual-status-${batch.status}`}>{manualStatusLabels[batch.status]}</span>
+              </div>
+              <div className="manual-batch-metrics">
+                <span>
+                  <strong>{batch.total_urls}</strong>
+                  ссылок
+                </span>
+                <span>
+                  <strong>{batch.analyzed_count}</strong>
+                  проанализировано
+                </span>
+                <span>
+                  <strong>{Math.max(batch.total_urls - batch.processed_count, 0)}</strong>
+                  ожидает анализа
+                </span>
+              </div>
+              <div className="manual-url-preview">
+                {batch.urls.slice(0, 3).map((item) => (
+                  <span key={item.id}>
+                    <Link size={14} />
+                    {item.source_detected || "unknown"} · {manualStatusLabels[item.status]}
+                  </span>
+                ))}
+              </div>
+              <small>Источник: {batch.source}</small>
+            </article>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
 export default async function Dashboard() {
   const dashboard = await getDashboardProperties();
-  const { summary, properties } = dashboard;
+  const { summary, properties, manual_intake_batches } = dashboard;
 
   return (
     <div className="page">
@@ -661,6 +744,8 @@ export default async function Dashboard() {
           <KpiCard icon={<BarChart3 size={20} />} label="Средний инвестиционный рейтинг" value={formatScore(summary.average_investment_score)} />
           <KpiCard icon={<ShieldAlert size={20} />} label="Средний риск" value={formatScore(summary.average_risk_score)} />
         </section>
+
+        <ManualIntakePanel batches={manual_intake_batches} />
 
         <section className="dashboard-panel">
           <div className="toolbar">

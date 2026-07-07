@@ -180,6 +180,32 @@ export type MarketSupportSummary = {
   conclusion: string;
 };
 
+export type ManualIntakeStatus = "draft" | "queued" | "processing" | "analyzed" | "failed";
+
+export type ManualListingUrl = {
+  id: string;
+  url: string;
+  source_detected: string;
+  status: ManualIntakeStatus;
+  error_message: string | null;
+  created_at: string;
+};
+
+export type ManualIntakeBatch = {
+  id: string;
+  name: string;
+  description: string;
+  created_at: string;
+  status: ManualIntakeStatus;
+  urls: ManualListingUrl[];
+  total_urls: number;
+  processed_count: number;
+  failed_count: number;
+  analyzed_count: number;
+  source: "manual";
+  linked_search_profile_id: string | null;
+};
+
 export type DashboardProperty = {
   id: string;
   source: string;
@@ -234,6 +260,7 @@ export type DashboardResponse = {
     recommendations: Record<Recommendation, number>;
   };
   properties: DashboardProperty[];
+  manual_intake_batches: ManualIntakeBatch[];
 };
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL ?? "http://localhost:8000";

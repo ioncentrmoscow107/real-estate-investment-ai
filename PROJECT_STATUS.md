@@ -6,7 +6,7 @@ This file is the project control panel. Keep it updated after each meaningful sp
 
 0.1.0
 
-Current milestone: TASK-007A Local Run Scripts Bootstrap Hotfix.
+Current milestone: Manual Listing Intake concept.
 
 ## Completed Sprints
 
@@ -19,17 +19,18 @@ Current milestone: TASK-007A Local Run Scripts Bootstrap Hotfix.
 - TASK-006: Property & Market Intelligence v1.
 - TASK-007: Local Dev Environment Stabilization.
 - TASK-007A: Local Run Scripts Bootstrap Hotfix.
+- Manual Listing Intake / Manual Analysis Batch concept.
 
 ## Current Sprint
 
-TASK-007A: Local Run Scripts Bootstrap Hotfix.
+Manual Listing Intake / Manual Analysis Batch concept.
 
 Focus:
 
-- Fix PowerShell script console encoding by using ASCII script output.
-- Make `scripts/start_backend.ps1` create `.venv` if missing and install backend requirements when `uvicorn` is absent.
-- Make `scripts/start_frontend.ps1` install frontend dependencies when `frontend/node_modules` is absent.
-- Keep product logic, dashboard UI, and sample data unchanged.
+- Add a mock-only manual URL intake concept without real URL parsing.
+- Show manual batches separately from automatically collected dashboard properties.
+- Mark manual intake source explicitly as `manual`.
+- Document intake modes: search profile, location, source/platform, and manual URL batch.
 
 ## Completed Features
 
@@ -85,6 +86,10 @@ Focus:
   - backend script bootstraps missing `.venv` and backend dependencies;
   - frontend script bootstraps missing `frontend/node_modules`;
   - environment check reports Python, venv Python, uvicorn, Node, npm.cmd, node_modules, and ports.
+- Manual listing intake concept:
+  - sample `manual_intake_batch` and `manual_listing_url` data;
+  - dashboard section for `Ручная подборка`;
+  - documentation in `docs/listing-intake-strategy.md`.
 
 ## Known Issues
 
@@ -94,6 +99,7 @@ Focus:
 - Property & Market Intelligence v1 uses sample/mock market data, not real external market data.
 - Real market data is still sample/mock.
 - Real scraping is not implemented.
+- Manual URL parsing is not implemented; manual intake is currently sample/mock only.
 - Photos are CSS/sample placeholders, not real listing photos.
 - No frontend sorting or filtering in Dashboard v2.
 - No full property analysis detail page.
@@ -128,7 +134,7 @@ Focus:
 
 ## Last Commit
 
-Pending local commit: `Fix local run scripts bootstrap`
+Pending local commit: `Add manual listing intake concept`
 
 Branch: `main`
 

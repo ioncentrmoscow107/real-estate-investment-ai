@@ -11,6 +11,89 @@ from app.services.acquisition.property_intelligence import PropertyIntelligenceS
 SAMPLE_UPDATED_AT = datetime(2026, 7, 7, 9, 30, tzinfo=timezone.utc)
 
 
+SAMPLE_MANUAL_INTAKE_BATCHES: list[dict[str, Any]] = [
+    {
+        "id": "manual-batch-szao-investor",
+        "name": "Объекты СЗАО от инвестора",
+        "description": "Ручная подборка ссылок, которые инвестор прислал для сравнения.",
+        "created_at": datetime(2026, 7, 7, 10, 15, tzinfo=timezone.utc).isoformat(),
+        "status": "processing",
+        "source": "manual",
+        "linked_search_profile_id": None,
+        "total_urls": 5,
+        "processed_count": 3,
+        "failed_count": 0,
+        "analyzed_count": 3,
+        "urls": [
+            {
+                "id": "manual-url-szao-1",
+                "url": "https://example.test/manual/szao-1",
+                "source_detected": "cian",
+                "status": "analyzed",
+                "error_message": None,
+                "created_at": datetime(2026, 7, 7, 10, 15, tzinfo=timezone.utc).isoformat(),
+            },
+            {
+                "id": "manual-url-szao-2",
+                "url": "https://example.test/manual/szao-2",
+                "source_detected": "avito",
+                "status": "analyzed",
+                "error_message": None,
+                "created_at": datetime(2026, 7, 7, 10, 16, tzinfo=timezone.utc).isoformat(),
+            },
+            {
+                "id": "manual-url-szao-3",
+                "url": "https://example.test/manual/szao-3",
+                "source_detected": "domclick",
+                "status": "analyzed",
+                "error_message": None,
+                "created_at": datetime(2026, 7, 7, 10, 17, tzinfo=timezone.utc).isoformat(),
+            },
+            {
+                "id": "manual-url-szao-4",
+                "url": "https://example.test/manual/szao-4",
+                "source_detected": "unknown",
+                "status": "queued",
+                "error_message": None,
+                "created_at": datetime(2026, 7, 7, 10, 18, tzinfo=timezone.utc).isoformat(),
+            },
+            {
+                "id": "manual-url-szao-5",
+                "url": "https://example.test/manual/szao-5",
+                "source_detected": "unknown",
+                "status": "queued",
+                "error_message": None,
+                "created_at": datetime(2026, 7, 7, 10, 19, tzinfo=timezone.utc).isoformat(),
+            },
+        ],
+    },
+    {
+        "id": "manual-batch-under-30m",
+        "name": "Помещения до 30 млн",
+        "description": "Небольшая ручная подборка для быстрой проверки перед мониторингом.",
+        "created_at": datetime(2026, 7, 7, 11, 5, tzinfo=timezone.utc).isoformat(),
+        "status": "analyzed",
+        "source": "manual",
+        "linked_search_profile_id": None,
+        "total_urls": 8,
+        "processed_count": 8,
+        "failed_count": 0,
+        "analyzed_count": 8,
+        "urls": [
+            {
+                "id": f"manual-url-under-30m-{index}",
+                "url": f"https://example.test/manual/under-30m-{index}",
+                "source_detected": "cian" if index % 2 else "avito",
+                "status": "analyzed",
+                "error_message": None,
+                "created_at": datetime(2026, 7, 7, 11, index, tzinfo=timezone.utc).isoformat(),
+            }
+            for index in range(1, 9)
+        ],
+    },
+]
+
+
 SAMPLE_INTELLIGENCE: dict[str, dict[str, Any]] = {
     "sample-buy-1": {
         "advantages": [
@@ -776,6 +859,7 @@ def get_sample_dashboard_properties() -> dict:
             "recommendations": recommendations,
         },
         "properties": properties,
+        "manual_intake_batches": SAMPLE_MANUAL_INTAKE_BATCHES,
     }
 
 

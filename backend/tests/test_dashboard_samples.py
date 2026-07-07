@@ -4,7 +4,7 @@ from app.services.dashboard_samples import get_sample_dashboard_properties
 def test_dashboard_sample_response_structure() -> None:
     response = get_sample_dashboard_properties()
 
-    assert set(response.keys()) == {"summary", "properties"}
+    assert set(response.keys()) == {"summary", "properties", "manual_intake_batches"}
     assert response["summary"]["total_properties"] == len(response["properties"])
     assert response["summary"]["total_properties"] > 0
     assert 0 <= response["summary"]["average_investment_score"] <= 100
@@ -89,6 +89,53 @@ def test_dashboard_sample_response_structure() -> None:
         assert isinstance(property_item["district_market_trends"], dict)
         assert isinstance(property_item["residential_market_context"], dict)
         assert isinstance(property_item["market_support_summary"], dict)
+
+
+def test_manual_intake_batches_are_present() -> None:
+    response = get_sample_dashboard_properties()
+    batches = response["manual_intake_batches"]
+
+    assert len(batches) == 2
+    assert {batch["name"] for batch in batches} == {
+        "Объекты СЗАО от инвестора",
+        "Помещения до 30 млн",
+    }
+
+    required_batch_fields = {
+        "id",
+        "name",
+        "description",
+        "created_at",
+        "status",
+        "urls",
+        "total_urls",
+        "processed_count",
+        "failed_count",
+        "analyzed_count",
+        "source",
+        "linked_search_profile_id",
+    }
+    required_url_fields = {
+        "id",
+        "url",
+        "source_detected",
+        "status",
+        "error_message",
+        "created_at",
+    }
+    allowed_statuses = {"draft", "queued", "processing", "analyzed", "failed"}
+
+    for batch in batches:
+        assert required_batch_fields.issubset(batch.keys())
+        assert batch["source"] == "manual"
+        assert batch["status"] in allowed_statuses
+        assert batch["total_urls"] == len(batch["urls"])
+        assert 0 <= batch["analyzed_count"] <= batch["total_urls"]
+
+        for url_item in batch["urls"]:
+            assert required_url_fields.issubset(url_item.keys())
+            assert url_item["url"].startswith("https://example.test/")
+            assert url_item["status"] in allowed_statuses
 
 
 def test_dashboard_samples_are_russian_investor_facing() -> None:

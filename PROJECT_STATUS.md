@@ -6,7 +6,7 @@ This file is the project control panel. Keep it updated after each meaningful sp
 
 0.1.0
 
-Current milestone: Russian Investor Dashboard UX v2 on top of deterministic acquisition and property intelligence foundations.
+Current milestone: Property & Market Intelligence v1 on top of the Russian investor dashboard.
 
 ## Completed Sprints
 
@@ -16,13 +16,16 @@ Current milestone: Russian Investor Dashboard UX v2 on top of deterministic acqu
 - Property Intelligence Engine v1.
 - Dashboard v1.
 - TASK-005: Russian Investor Dashboard UX v2.
+- TASK-006: Property & Market Intelligence v1.
 
 ## Current Sprint
 
-TASK-005 completed: Russian investor-facing Dashboard UX v2.
+TASK-006: Property & Market Intelligence v1.
 
 Focus:
 
+- Show why each score was assigned.
+- Add property photos/placeholders, building context, surroundings, traffic, competitors, comparables, trends, residential market context, and market support conclusion.
 - Keep the dashboard suitable for Russian private investors and investment groups.
 - Preserve the compliance boundary around real estate data acquisition.
 - Continue improving decision workflow without enabling production scraping prematurely.
@@ -55,6 +58,19 @@ Focus:
 - Compact investment memo cards with key facts, strengths, risks, all score groups, missing information, and due diligence checklist.
 - Russian sample analyzed properties for realistic Moscow commercial real estate scenarios.
 - Dashboard API response includes average risk and full score set for investor details.
+- Property & Market Intelligence v1 sample data:
+  - explainable score factors;
+  - photo placeholders;
+  - building and premises context;
+  - surroundings context;
+  - traffic context;
+  - competition context;
+  - nearby sale comparables;
+  - nearby rental rates;
+  - district commercial market trends;
+  - residential new-development and resale context;
+  - market support conclusion.
+- Dashboard v3 expanded investor dossier sections for property and market intelligence.
 - Documentation in `docs/` for architecture, operations, data acquisition, source adapters, investment scoring, property intelligence, and dashboard.
 
 ## Known Issues
@@ -62,6 +78,8 @@ Focus:
 - Production scraping is not implemented.
 - Collector placeholders currently return no real listings.
 - Dashboard v2 uses sample analyzed properties, not live database-backed analyzed properties.
+- Property & Market Intelligence v1 uses sample/mock market data, not real external market data.
+- Photos are CSS/sample placeholders, not real listing photos.
 - No frontend sorting or filtering in Dashboard v2.
 - No full property analysis detail page.
 - OpenAI package and prompt assets exist, but current scoring/intelligence is deterministic and does not call OpenAI.
@@ -83,6 +101,8 @@ Focus:
   - partner feed;
   - permitted public pages;
   - manual or semi-automatic import.
+- Plan validation for real property and market intelligence inputs.
+- Decide how to ingest compliant photos, building data, comparables, rent rates, and trend data.
 - Connect dashboard to persisted analyzed properties when the backend has a durable analysis store.
 - Add dashboard sorting and filtering.
 - Add a full property analysis view.
@@ -93,7 +113,7 @@ Focus:
 
 ## Last Commit
 
-Pending local commit: `Polish Russian investor dashboard v1`
+Pending local commit: `Add property and market intelligence dashboard`
 
 Branch: `main`
 
@@ -169,7 +189,7 @@ Status: complete.
 
 ### Phase 4: Investor Dashboard
 
-Status: complete for v2 sample-data UX.
+Status: complete for v3 sample-data UX.
 
 - Sample analyzed properties endpoint.
 - Summary metrics.
@@ -178,6 +198,7 @@ Status: complete for v2 sample-data UX.
 - Russian investor-facing labels and sample data.
 - Compact investment memo cards.
 - Expanded score details and due diligence blocks.
+- Property & Market Intelligence sections with photos, score explanations, market context, comparables, trends, residential market context, and market support conclusion.
 
 ### Phase 5: Stabilization
 

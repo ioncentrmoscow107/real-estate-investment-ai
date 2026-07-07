@@ -2,12 +2,16 @@ from __future__ import annotations
 
 from dataclasses import asdict
 from datetime import datetime, timezone
+from typing import Any
 
 from app.services.acquisition.models import NormalizedListing
 from app.services.acquisition.property_intelligence import PropertyIntelligenceService
 
 
-RUSSIAN_SAMPLE_ANALYSIS = {
+SAMPLE_UPDATED_AT = datetime(2026, 7, 7, 9, 30, tzinfo=timezone.utc)
+
+
+SAMPLE_INTELLIGENCE: dict[str, dict[str, Any]] = {
     "sample-buy-1": {
         "advantages": [
             "Федеральный арендатор снижает риск вакантности",
@@ -37,9 +41,232 @@ RUSSIAN_SAMPLE_ANALYSIS = {
         ],
         "short_summary": (
             "Сильный объект для покупки: новый дом, первый этаж, федеральный арендатор "
-            "и высокая электрическая мощность. Перед сделкой нужно подтвердить договор аренды, "
-            "индексацию и технические условия."
+            "и высокая электрическая мощность. Рынок умеренно поддерживает покупку, "
+            "но перед сделкой нужно подтвердить договор аренды, индексацию и технические условия."
         ),
+        "market_signal": "рынок поддерживает",
+        "score_explanations": {
+            "investment_score": {
+                "positive_factors": [
+                    "Федеральный арендатор уже занимает помещение",
+                    "Цена находится в целевом диапазоне 100-400 млн ₽",
+                    "Объект расположен на первом этаже нового ЖК",
+                ],
+                "negative_factors": ["Не раскрыта индексация арендной ставки"],
+                "summary": "AI считает объект интересным из-за сочетания арендатора, нового дома и рыночной цены.",
+            },
+            "liquidity_score": {
+                "positive_factors": [
+                    "Первый этаж и отдельный вход повышают ликвидность",
+                    "Высокая мощность расширяет круг арендаторов",
+                    "Рядом плотная жилая застройка",
+                ],
+                "negative_factors": ["Нужно подтвердить фактический пешеходный трафик"],
+                "summary": "Ликвидность высокая, но зависит от подтверждения трафика и условий аренды.",
+            },
+            "tenant_score": {
+                "positive_factors": ["Ozon является федеральным арендатором", "Категория ПВЗ устойчива для жилого массива"],
+                "negative_factors": ["Не раскрыт срок обязательной части договора"],
+                "summary": "Арендатор усиливает профиль объекта, но договор нужно проверить документально.",
+            },
+            "building_score": {
+                "positive_factors": ["Дом 2021 года", "Современный фасад и витринный первый этаж"],
+                "negative_factors": ["Нужно проверить регламент вывесок и разгрузки"],
+                "summary": "Качество здания поддерживает эксплуатацию и будущую перепродажу.",
+            },
+            "location_score": {
+                "positive_factors": ["Жилой массив с высокой плотностью", "Есть якорные маршруты к метро и остановкам"],
+                "negative_factors": ["Не все потоки проходят прямо вдоль фасада"],
+                "summary": "Локация сильная для повседневного спроса, но требует проверки конкретного трафика.",
+            },
+            "risk_score": {
+                "positive_factors": ["Риск снижает федеральный арендатор и новый дом"],
+                "negative_factors": ["Риск усиливает неполная информация по аренде"],
+                "summary": "Риск умеренный: главный вопрос — качество и срок договора аренды.",
+            },
+            "fake_score": {
+                "positive_factors": ["Есть адрес, фото-заглушки, арендатор и параметры помещения"],
+                "negative_factors": ["Нужно сверить данные с правоустанавливающими документами"],
+                "summary": "AI сомневается слабо, но требует стандартной проверки ЕГРН и договора.",
+            },
+            "data_quality_score": {
+                "positive_factors": ["Заполнены цена, площадь, мощность, арендатор и характеристики дома"],
+                "negative_factors": ["Нет фактических платежей и условий индексации"],
+                "summary": "Качество данных достаточное для первичного решения, но не для сделки без проверки.",
+            },
+        },
+        "photos": [
+            {"url": None, "caption": "Фасад и витрины", "type": "facade", "is_main": True},
+            {"url": None, "caption": "Входная группа", "type": "entrance", "is_main": False},
+            {"url": None, "caption": "Интерьер помещения", "type": "interior", "is_main": False},
+        ],
+        "building_context": {
+            "building_year": 2021,
+            "building_class": "современный жилой комплекс бизнес-класса",
+            "residential_units": 980,
+            "commercial_units": 18,
+            "floors_total": 12,
+            "parking_type": "подземный и гостевой",
+            "facade_condition": "хорошее состояние, современная облицовка",
+            "entrance_type": "отдельный вход с улицы",
+            "entrance_visibility": "хорошая видимость с пешеходного потока",
+            "window_display_quality": "широкие витрины на первой линии",
+            "ceiling_height_m": 4.2,
+            "separate_entrance": True,
+            "loading_access": "разгрузка через дворовой проезд по согласованию",
+            "comments": "Дом формирует собственный локальный спрос и поддерживает формат ПВЗ/ритейла.",
+        },
+        "surroundings_context": {
+            "radius_m": 800,
+            "residential_density": "высокая",
+            "office_density": "средняя",
+            "schools_nearby": 2,
+            "kindergartens_nearby": 3,
+            "medical_centers_nearby": 4,
+            "business_centers_nearby": 2,
+            "shopping_centers_nearby": 1,
+            "public_transport_stops_nearby": 6,
+            "metro_distance_m": 650,
+            "parking_availability": "ограниченная гостевая парковка",
+            "key_anchors": ["метро ЦСКА", "жилой комплекс", "школа", "медицинский центр"],
+            "comments": "Окружение дает ежедневный спрос от жителей, родителей, сотрудников офисов и посетителей метро.",
+        },
+        "traffic_context": {
+            "pedestrian_traffic_level": "высокий",
+            "car_traffic_level": "средний",
+            "target_traffic_level": "высокий",
+            "transit_traffic_level": "средний",
+            "visibility_from_road": "хорошая",
+            "nearest_metro_distance_m": 650,
+            "nearest_public_transport_distance_m": 180,
+            "main_pedestrian_routes": ["маршрут от метро к ЖК", "поток к школе и остановкам"],
+            "traffic_positive_factors": ["первый этаж", "витрины", "жилой массив", "рядом остановки"],
+            "traffic_negative_factors": ["часть потока уходит через внутренний двор"],
+            "comments": "Трафик подходит для арендаторов ежедневного спроса.",
+        },
+        "competition_context": {
+            "nearby_competitors_count": 8,
+            "vacant_premises_nearby": 2,
+            "saturation_level": "средний",
+            "competitor_categories": ["пункты выдачи", "кофейни", "аптеки", "салоны красоты"],
+            "anchor_tenants_nearby": ["ВкусВилл", "Яндекс Маркет", "аптека"],
+            "risk_of_oversupply": "умеренный",
+            "comments": "Конкуренция есть, но плотность жителей поддерживает несколько форматов ежедневного спроса.",
+        },
+        "nearby_sale_comparables": [
+            {
+                "title": "Стрит-ритейл в ЖК на Ходынке",
+                "distance_m": 420,
+                "area_sqm": 210,
+                "price_rub": 168_000_000,
+                "price_per_sqm": 800_000,
+                "property_type": "street_retail",
+                "building_year": 2020,
+                "source": "sample market memo",
+                "confidence": "средняя",
+            },
+            {
+                "title": "Торговое помещение у метро ЦСКА",
+                "distance_m": 760,
+                "area_sqm": 260,
+                "price_rub": 214_500_000,
+                "price_per_sqm": 825_000,
+                "property_type": "retail_premises",
+                "building_year": 2022,
+                "source": "sample market memo",
+                "confidence": "средняя",
+            },
+        ],
+        "sale_comparables_summary": {
+            "avg_price_per_sqm": 812_500,
+            "min_price_per_sqm": 800_000,
+            "max_price_per_sqm": 825_000,
+            "subject_price_vs_market_percent": -7.7,
+            "conclusion": "Цена объекта ниже ближайших аналогов примерно на 8%, что поддерживает инвестиционную привлекательность.",
+        },
+        "nearby_rental_rates": [
+            {
+                "title": "ПВЗ в новом ЖК",
+                "distance_m": 360,
+                "property_type": "street_retail",
+                "area_sqm": 180,
+                "rent_rub_per_month": 1_350_000,
+                "rent_rub_per_sqm_per_year": 90_000,
+                "source": "sample rent memo",
+                "confidence": "средняя",
+            },
+            {
+                "title": "Помещение под сервисы у метро",
+                "distance_m": 710,
+                "property_type": "retail_premises",
+                "area_sqm": 230,
+                "rent_rub_per_month": 1_610_000,
+                "rent_rub_per_sqm_per_year": 84_000,
+                "source": "sample rent memo",
+                "confidence": "средняя",
+            },
+        ],
+        "rental_rates_summary": {
+            "avg_rent_rub_per_sqm_per_year": 87_000,
+            "min_rent_rub_per_sqm_per_year": 84_000,
+            "max_rent_rub_per_sqm_per_year": 90_000,
+            "subject_rent_vs_market_percent": 4.0,
+            "conclusion": "Заявленная арендная ставка близка к рынку, отклонение около +4%.",
+        },
+        "district_market_trends": {
+            "commercial_rent_trend": {
+                "period": "12 месяцев",
+                "trend": "растет",
+                "change_percent": 8.5,
+                "confidence": "средняя",
+                "explanation": "Ставки поддерживаются вводом новых ЖК и спросом на сервисы у дома.",
+            },
+            "commercial_sale_price_trend": {
+                "period": "12 месяцев",
+                "trend": "растет",
+                "change_percent": 6.2,
+                "confidence": "средняя",
+                "explanation": "Инвесторы продолжают искать помещения с арендаторами в новых домах.",
+            },
+            "vacancy_trend": {
+                "period": "12 месяцев",
+                "trend": "снижается",
+                "change_percent": -3.0,
+                "confidence": "низкая",
+                "explanation": "Вакантность снижается в качественных помещениях на первых этажах.",
+            },
+        },
+        "residential_market_context": {
+            "new_development": {
+                "new_buildings_nearby_count": 4,
+                "planned_units": 3800,
+                "delivered_units_last_3_years": 2100,
+                "projects_under_construction": 2,
+                "avg_new_building_price_per_sqm": 520_000,
+                "price_trend_percent": 7.8,
+                "comments": "Новые ЖК увеличивают локальный спрос на доставку, сервисы и повседневную торговлю.",
+            },
+            "resale_market": {
+                "avg_resale_price_per_sqm": 430_000,
+                "resale_price_trend_percent": 5.1,
+                "liquidity_level": "высокая",
+                "demand_level": "высокий",
+                "comments": "Сильная вторичка косвенно подтверждает платежеспособный спрос района.",
+            },
+        },
+        "market_support_summary": {
+            "support_level": "сильная поддержка рынка",
+            "positive_factors": [
+                "Коммерческая аренда растет",
+                "Цена ниже ближайших аналогов",
+                "Рядом строятся новые жилые проекты",
+            ],
+            "negative_factors": ["Нужно подтвердить фактический трафик и срок аренды"],
+            "conclusion": (
+                "Рынок поддерживает покупку: ставки аренды растут, рядом новые ЖК, "
+                "а цена объекта ниже ближайших аналогов. Основной риск — неполные данные по аренде."
+            ),
+        },
     },
     "sample-watch-1": {
         "advantages": [
@@ -71,57 +298,230 @@ RUSSIAN_SAMPLE_ANALYSIS = {
         ],
         "short_summary": (
             "Интересный объект для дополнительного изучения: параметры подходят под MVP, "
-            "но нет арендатора и нужны вложения в отделку. Решение зависит от подтверждения "
-            "спроса, ремонта и мощности."
+            "но нет арендатора и нужны вложения в отделку. Рынок нейтрален: решение зависит "
+            "от подтверждения спроса, ремонта, мощности и достижимой ставки аренды."
         ),
-    },
-    "sample-buy-2": {
-        "advantages": [
-            "Федеральный арендатор снижает риск вакантности",
-            "Первый этаж и витринные окна",
-            "Электрическая мощность 95 кВт",
-            "Цена находится в целевом диапазоне",
+        "market_signal": "рынок нейтрален",
+        "score_explanations": {
+            "investment_score": {
+                "positive_factors": ["Цена в целевом диапазоне", "Первый этаж", "Можно увеличить мощность"],
+                "negative_factors": ["Нет арендатора", "Нужен ремонт", "Неясна достижимая ставка аренды"],
+                "summary": "AI считает объект потенциально интересным, но недостаточно подтвержденным для покупки.",
+            },
+            "liquidity_score": {
+                "positive_factors": ["Первый этаж", "Метро в пешей доступности"],
+                "negative_factors": ["Shell&core сужает круг покупателей без дисконта"],
+                "summary": "Ликвидность средняя: помещение может быть востребовано после отделки.",
+            },
+            "tenant_score": {
+                "positive_factors": ["Формат подходит для сервисов и медицины"],
+                "negative_factors": ["Текущий арендатор не указан"],
+                "summary": "Оценка арендатора снижена, потому что доход пока не подтвержден.",
+            },
+            "building_score": {
+                "positive_factors": ["Дом после 2016 года", "Коммерческий первый этаж"],
+                "negative_factors": ["Фасад и вход нужно проверить на месте"],
+                "summary": "Дом подходит под критерии, но качество помещения зависит от fit-out.",
+            },
+            "location_score": {
+                "positive_factors": ["Метро и жилой поток рядом"],
+                "negative_factors": ["Часть спроса перетягивает крупный торговый узел"],
+                "summary": "Локация рабочая, но не очевидно сильная без замера трафика.",
+            },
+            "risk_score": {
+                "positive_factors": ["Риск снижает первый этаж и цена в диапазоне"],
+                "negative_factors": ["Риск усиливают ремонт, отсутствие арендатора и неполная мощность"],
+                "summary": "Риск выше среднего, поэтому рекомендация — изучить подробнее.",
+            },
+            "fake_score": {
+                "positive_factors": ["Есть адрес, базовые параметры и продавец"],
+                "negative_factors": ["Нет подтвержденной экономики аренды"],
+                "summary": "AI сомневается не в объявлении, а в инвестиционной экономике.",
+            },
+            "data_quality_score": {
+                "positive_factors": ["Есть цена, площадь, адрес и часть технических параметров"],
+                "negative_factors": ["Нет сметы ремонта и документов по увеличению мощности"],
+                "summary": "Данных достаточно для первичного отбора, но не для решения о покупке.",
+            },
+        },
+        "photos": [
+            {"url": None, "caption": "Фасад и витрины", "type": "facade", "is_main": True},
+            {"url": None, "caption": "Планировка", "type": "floor_plan", "is_main": False},
         ],
-        "disadvantages": [
-            "Нужно проверить фактический покупательский трафик",
-            "Нет подтверждения по арендным каникулам",
+        "building_context": {
+            "building_year": 2018,
+            "building_class": "жилой комплекс комфорт-класса",
+            "residential_units": 640,
+            "commercial_units": 12,
+            "floors_total": 18,
+            "parking_type": "подземный, гостевые места ограничены",
+            "facade_condition": "нормальное состояние",
+            "entrance_type": "отдельный вход",
+            "entrance_visibility": "средняя видимость",
+            "window_display_quality": "витрины есть, требуется оценка вывески",
+            "ceiling_height_m": 3.8,
+            "separate_entrance": True,
+            "loading_access": "через дворовую территорию",
+            "comments": "Помещение подходит для сервиса, но требует отделки и проверки регламентов.",
+        },
+        "surroundings_context": {
+            "radius_m": 800,
+            "residential_density": "средняя",
+            "office_density": "низкая",
+            "schools_nearby": 3,
+            "kindergartens_nearby": 2,
+            "medical_centers_nearby": 2,
+            "business_centers_nearby": 1,
+            "shopping_centers_nearby": 2,
+            "public_transport_stops_nearby": 5,
+            "metro_distance_m": 520,
+            "parking_availability": "ограниченная",
+            "key_anchors": ["метро", "торговый центр", "школа", "жилые корпуса"],
+            "comments": "Окружение формирует спрос, но часть потока уходит в соседний ТЦ.",
+        },
+        "traffic_context": {
+            "pedestrian_traffic_level": "средний",
+            "car_traffic_level": "высокий",
+            "target_traffic_level": "средний",
+            "transit_traffic_level": "средний",
+            "visibility_from_road": "средняя",
+            "nearest_metro_distance_m": 520,
+            "nearest_public_transport_distance_m": 140,
+            "main_pedestrian_routes": ["метро - жилые корпуса", "остановка - торговый центр"],
+            "traffic_positive_factors": ["рядом метро", "первый этаж", "остановка транспорта"],
+            "traffic_negative_factors": ["не первая линия главного потока", "конкуренция ТЦ"],
+            "comments": "Для покупки нужен натурный замер трафика в будний и выходной день.",
+        },
+        "competition_context": {
+            "nearby_competitors_count": 14,
+            "vacant_premises_nearby": 5,
+            "saturation_level": "выше среднего",
+            "competitor_categories": ["кофейни", "салоны красоты", "медицинские услуги", "общепит", "аптеки"],
+            "anchor_tenants_nearby": ["сетевой супермаркет", "аптека", "фитнес"],
+            "risk_of_oversupply": "повышенный",
+            "comments": "Высокая конкуренция требует осторожной ставки аренды и точного tenant mix.",
+        },
+        "nearby_sale_comparables": [
+            {
+                "title": "ПСН у Ленинского проспекта",
+                "distance_m": 480,
+                "area_sqm": 175,
+                "price_rub": 137_000_000,
+                "price_per_sqm": 782_857,
+                "property_type": "free_use",
+                "building_year": 2017,
+                "source": "sample market memo",
+                "confidence": "низкая",
+            },
+            {
+                "title": "Торговое помещение у метро",
+                "distance_m": 690,
+                "area_sqm": 220,
+                "price_rub": 181_500_000,
+                "price_per_sqm": 825_000,
+                "property_type": "retail_premises",
+                "building_year": 2019,
+                "source": "sample market memo",
+                "confidence": "средняя",
+            },
         ],
-        "risks": [
-            "Нет подтверждения по индексации аренды",
-            "Возможна зависимость дохода от одного арендатора",
+        "sale_comparables_summary": {
+            "avg_price_per_sqm": 803_929,
+            "min_price_per_sqm": 782_857,
+            "max_price_per_sqm": 825_000,
+            "subject_price_vs_market_percent": -5.1,
+            "conclusion": "Цена немного ниже аналогов, но дисконт может отражать необходимость ремонта.",
+        },
+        "nearby_rental_rates": [
+            {
+                "title": "ПСН под медуслуги",
+                "distance_m": 430,
+                "property_type": "free_use",
+                "area_sqm": 160,
+                "rent_rub_per_month": 880_000,
+                "rent_rub_per_sqm_per_year": 66_000,
+                "source": "sample rent memo",
+                "confidence": "низкая",
+            },
+            {
+                "title": "Ритейл рядом с метро",
+                "distance_m": 740,
+                "property_type": "street_retail",
+                "area_sqm": 210,
+                "rent_rub_per_month": 1_330_000,
+                "rent_rub_per_sqm_per_year": 76_000,
+                "source": "sample rent memo",
+                "confidence": "средняя",
+            },
         ],
-        "missing_information": [
-            "Индексация аренды",
-            "Срок обязательной части договора",
-            "История арендных платежей",
-        ],
-        "due_diligence_checklist": [
-            "Проверить выписку ЕГРН",
-            "Проверить договор аренды и обеспечительный платеж",
-            "Проверить индексацию арендной ставки",
-            "Подтвердить электрическую мощность документально",
-            "Проверить налоговую и коммунальную нагрузку",
-        ],
-        "short_summary": (
-            "Объект выглядит пригодным для покупки после проверки аренды: первый этаж, "
-            "федеральный арендатор и достаточная мощность поддерживают ликвидность."
-        ),
+        "rental_rates_summary": {
+            "avg_rent_rub_per_sqm_per_year": 71_000,
+            "min_rent_rub_per_sqm_per_year": 66_000,
+            "max_rent_rub_per_sqm_per_year": 76_000,
+            "subject_rent_vs_market_percent": 0.0,
+            "conclusion": "Рыночная ставка выглядит достижимой, но фактический арендатор отсутствует.",
+        },
+        "district_market_trends": {
+            "commercial_rent_trend": {
+                "period": "12 месяцев",
+                "trend": "стабильно",
+                "change_percent": 2.1,
+                "confidence": "низкая",
+                "explanation": "Рост ставок ограничен конкуренцией и вакантными помещениями.",
+            },
+            "commercial_sale_price_trend": {
+                "period": "12 месяцев",
+                "trend": "растет",
+                "change_percent": 3.4,
+                "confidence": "низкая",
+                "explanation": "Цены растут умеренно, качественные объекты продаются быстрее.",
+            },
+            "vacancy_trend": {
+                "period": "12 месяцев",
+                "trend": "растет",
+                "change_percent": 4.0,
+                "confidence": "низкая",
+                "explanation": "Вакантность рядом повышает риск завышенной арендной модели.",
+            },
+        },
+        "residential_market_context": {
+            "new_development": {
+                "new_buildings_nearby_count": 2,
+                "planned_units": 1200,
+                "delivered_units_last_3_years": 900,
+                "projects_under_construction": 1,
+                "avg_new_building_price_per_sqm": 410_000,
+                "price_trend_percent": 3.2,
+                "comments": "Новые дома поддерживают спрос, но темп ввода не взрывной.",
+            },
+            "resale_market": {
+                "avg_resale_price_per_sqm": 335_000,
+                "resale_price_trend_percent": 1.8,
+                "liquidity_level": "средняя",
+                "demand_level": "средний",
+                "comments": "Вторичный рынок стабильный, без сильного сигнала ускорения спроса.",
+            },
+        },
+        "market_support_summary": {
+            "support_level": "нейтрально",
+            "positive_factors": ["Цена немного ниже аналогов", "Есть метро и жилой спрос"],
+            "negative_factors": ["Нет арендатора", "Растет вакантность", "Нужны вложения в ремонт"],
+            "conclusion": "Рынок не запрещает покупку, но и не дает сильной поддержки. Нужна проверка аренды и capex.",
+        },
     },
     "sample-avoid-1": {
-        "advantages": [
-            "Цена за м² ниже сопоставимых объектов",
-        ],
+        "advantages": ["Большая площадь может подойти крупному оператору"],
         "disadvantages": [
             "Помещение без арендатора и требует ремонта",
             "Не первый этаж",
             "Здание старше целевого критерия",
-            "Недостаточно данных для оценки ликвидности",
+            "Цена выше целевого диапазона",
         ],
         "risks": [
             "Не подтверждена электрическая мощность",
-            "Возможна завышенная итоговая стоимость с учетом ремонта",
+            "Возможна завышенная цена за м² относительно качества",
             "Нет точного адреса и фотографий",
-            "Долгая экспозиция может указывать на слабый спрос",
+            "Рядом много вакантных помещений",
         ],
         "missing_information": [
             "Точный адрес",
@@ -135,12 +535,219 @@ RUSSIAN_SAMPLE_ANALYSIS = {
             "Подтвердить электрическую мощность документально",
             "Проверить состояние ремонта",
             "Проверить фактический трафик",
-            "Проверить налоговую и коммунальную нагрузку",
+            "Сравнить цену с реальными аналогами продаж",
         ],
         "short_summary": (
-            "Покупку не рекомендую: слишком много критичных пробелов в данных, объект не "
-            "соответствует нескольким MVP-критериям и требует существенной проверки до переговоров."
+            "Покупку не рекомендую: объект не соответствует нескольким MVP-критериям, "
+            "имеет слабую рыночную поддержку, неполные данные и повышенный риск вакантности."
         ),
+        "market_signal": "рынок слабый",
+        "score_explanations": {
+            "investment_score": {
+                "positive_factors": ["Большая площадь может быть интересна ограниченному кругу арендаторов"],
+                "negative_factors": ["Цена вне диапазона", "Нет арендатора", "Нужен ремонт", "Не первый этаж"],
+                "summary": "AI не видит достаточных причин покупать объект на текущих вводных.",
+            },
+            "liquidity_score": {
+                "positive_factors": ["Площадь может подойти крупному формату"],
+                "negative_factors": ["Второй этаж", "много конкуренции и вакансии рядом", "нет точного адреса"],
+                "summary": "Ликвидность слабая: перепродажа и сдача в аренду могут быть сложными.",
+            },
+            "tenant_score": {
+                "positive_factors": [],
+                "negative_factors": ["Арендатор отсутствует", "нет подтвержденной арендной модели"],
+                "summary": "Доходность не подтверждена, поэтому tenant score низкий.",
+            },
+            "building_score": {
+                "positive_factors": ["Есть крупная площадь"],
+                "negative_factors": ["Здание старше 2016 года", "неизвестное состояние фасада и входа"],
+                "summary": "Здание не соответствует целевому профилю MVP.",
+            },
+            "location_score": {
+                "positive_factors": ["Заявлен крупный районный поток"],
+                "negative_factors": ["Адрес не раскрыт", "нет подтверждения видимости и маршрутов"],
+                "summary": "Локацию невозможно надежно оценить без адреса и натурной проверки.",
+            },
+            "risk_score": {
+                "positive_factors": [],
+                "negative_factors": ["Риск усиливают отсутствие арендатора, ремонта, адреса и фото"],
+                "summary": "Риск высокий, поэтому AI не рекомендует покупку.",
+            },
+            "fake_score": {
+                "positive_factors": ["Есть базовые цена и площадь"],
+                "negative_factors": ["Нет адреса, фото и продавца"],
+                "summary": "AI сомневается в качестве объявления и требует верификации.",
+            },
+            "data_quality_score": {
+                "positive_factors": ["Известны цена и площадь"],
+                "negative_factors": ["Не хватает адреса, фото, арендатора, мощности и продавца"],
+                "summary": "Качество данных низкое для инвестиционного решения.",
+            },
+        },
+        "photos": [
+            {"url": None, "caption": "Фото не предоставлены", "type": "facade", "is_main": True},
+            {"url": None, "caption": "Требуется фото входной группы", "type": "entrance", "is_main": False},
+        ],
+        "building_context": {
+            "building_year": 2014,
+            "building_class": "административно-жилое здание старого фонда",
+            "residential_units": 220,
+            "commercial_units": 9,
+            "floors_total": 8,
+            "parking_type": "стихийная городская парковка",
+            "facade_condition": "требует проверки",
+            "entrance_type": "не подтвержден",
+            "entrance_visibility": "неизвестно",
+            "window_display_quality": "нет данных",
+            "ceiling_height_m": None,
+            "separate_entrance": False,
+            "loading_access": "нет данных",
+            "comments": "Без адреса и фото невозможно подтвердить качество здания и помещения.",
+        },
+        "surroundings_context": {
+            "radius_m": 800,
+            "residential_density": "средняя",
+            "office_density": "низкая",
+            "schools_nearby": 1,
+            "kindergartens_nearby": 1,
+            "medical_centers_nearby": 1,
+            "business_centers_nearby": 0,
+            "shopping_centers_nearby": 1,
+            "public_transport_stops_nearby": 3,
+            "metro_distance_m": 1450,
+            "parking_availability": "ограниченная",
+            "key_anchors": ["локальный торговый ряд", "остановки транспорта"],
+            "comments": "Окружение не дает сильного подтверждения спроса для крупной площади.",
+        },
+        "traffic_context": {
+            "pedestrian_traffic_level": "низкий",
+            "car_traffic_level": "средний",
+            "target_traffic_level": "низкий",
+            "transit_traffic_level": "низкий",
+            "visibility_from_road": "не подтверждена",
+            "nearest_metro_distance_m": 1450,
+            "nearest_public_transport_distance_m": 320,
+            "main_pedestrian_routes": ["локальный поток от остановки"],
+            "traffic_positive_factors": ["есть автомобильный поток"],
+            "traffic_negative_factors": ["далеко от метро", "не подтверждена видимость", "не первый этаж"],
+            "comments": "Трафик не поддерживает покупку без сильного дисконта.",
+        },
+        "competition_context": {
+            "nearby_competitors_count": 19,
+            "vacant_premises_nearby": 7,
+            "saturation_level": "высокий",
+            "competitor_categories": ["пункты выдачи", "аптеки", "общепит", "бытовые услуги", "салоны красоты"],
+            "anchor_tenants_nearby": ["локальный супермаркет", "аптека"],
+            "risk_of_oversupply": "высокий",
+            "comments": "Рядом много альтернатив для арендаторов, что давит на ставку и сроки экспозиции.",
+        },
+        "nearby_sale_comparables": [
+            {
+                "title": "Крупное ПСН в старом фонде",
+                "distance_m": 540,
+                "area_sqm": 760,
+                "price_rub": 265_000_000,
+                "price_per_sqm": 348_684,
+                "property_type": "free_use",
+                "building_year": 2012,
+                "source": "sample market memo",
+                "confidence": "низкая",
+            },
+            {
+                "title": "Помещение на втором этаже",
+                "distance_m": 880,
+                "area_sqm": 620,
+                "price_rub": 217_000_000,
+                "price_per_sqm": 350_000,
+                "property_type": "retail_premises",
+                "building_year": 2015,
+                "source": "sample market memo",
+                "confidence": "низкая",
+            },
+        ],
+        "sale_comparables_summary": {
+            "avg_price_per_sqm": 349_342,
+            "min_price_per_sqm": 348_684,
+            "max_price_per_sqm": 350_000,
+            "subject_price_vs_market_percent": -48.5,
+            "conclusion": "Низкая цена за м² может отражать существенные дефекты, слабую локацию или недостоверность данных.",
+        },
+        "nearby_rental_rates": [
+            {
+                "title": "Большое помещение без ремонта",
+                "distance_m": 610,
+                "property_type": "free_use",
+                "area_sqm": 700,
+                "rent_rub_per_month": 1_750_000,
+                "rent_rub_per_sqm_per_year": 30_000,
+                "source": "sample rent memo",
+                "confidence": "низкая",
+            },
+            {
+                "title": "Помещение под услуги на втором этаже",
+                "distance_m": 900,
+                "property_type": "free_use",
+                "area_sqm": 480,
+                "rent_rub_per_month": 1_080_000,
+                "rent_rub_per_sqm_per_year": 27_000,
+                "source": "sample rent memo",
+                "confidence": "низкая",
+            },
+        ],
+        "rental_rates_summary": {
+            "avg_rent_rub_per_sqm_per_year": 28_500,
+            "min_rent_rub_per_sqm_per_year": 27_000,
+            "max_rent_rub_per_sqm_per_year": 30_000,
+            "subject_rent_vs_market_percent": 18.0,
+            "conclusion": "Аренда выглядит завышенной относительно ближайших аналогов, требуется подтверждение фактических платежей.",
+        },
+        "district_market_trends": {
+            "commercial_rent_trend": {
+                "period": "12 месяцев",
+                "trend": "снижается",
+                "change_percent": -4.5,
+                "confidence": "низкая",
+                "explanation": "Спрос слабый, крупные площади экспонируются дольше.",
+            },
+            "commercial_sale_price_trend": {
+                "period": "12 месяцев",
+                "trend": "стабильно",
+                "change_percent": 0.5,
+                "confidence": "низкая",
+                "explanation": "Сделки редкие, качественных аналогов мало.",
+            },
+            "vacancy_trend": {
+                "period": "12 месяцев",
+                "trend": "растет",
+                "change_percent": 6.0,
+                "confidence": "низкая",
+                "explanation": "Вакансия рядом растет, что ухудшает переговорную позицию собственника.",
+            },
+        },
+        "residential_market_context": {
+            "new_development": {
+                "new_buildings_nearby_count": 0,
+                "planned_units": 0,
+                "delivered_units_last_3_years": 180,
+                "projects_under_construction": 0,
+                "avg_new_building_price_per_sqm": None,
+                "price_trend_percent": 0.0,
+                "comments": "Новых ЖК рядом почти нет, дополнительный спрос не формируется.",
+            },
+            "resale_market": {
+                "avg_resale_price_per_sqm": 235_000,
+                "resale_price_trend_percent": -1.5,
+                "liquidity_level": "низкая",
+                "demand_level": "слабый",
+                "comments": "Слабая вторичка не поддерживает агрессивную коммерческую ставку.",
+            },
+        },
+        "market_support_summary": {
+            "support_level": "слабая поддержка рынка",
+            "positive_factors": ["Низкая цена за м² может дать запас для переговоров"],
+            "negative_factors": ["Слабый трафик", "много вакансии", "ставки аренды снижаются", "нет новых ЖК"],
+            "conclusion": "Рынок не поддерживает покупку: данных мало, вакансия растет, аренда выглядит завышенной.",
+        },
     },
 }
 
@@ -174,7 +781,7 @@ def get_sample_dashboard_properties() -> dict:
 
 def _build_dashboard_property(listing: NormalizedListing) -> dict:
     intelligence = PropertyIntelligenceService().analyze(listing)
-    russian_analysis = RUSSIAN_SAMPLE_ANALYSIS.get(listing.source_listing_id or "", {})
+    sample = SAMPLE_INTELLIGENCE.get(listing.source_listing_id or "", {})
     return {
         "id": listing.source_listing_id,
         "source": listing.source,
@@ -198,15 +805,29 @@ def _build_dashboard_property(listing: NormalizedListing) -> dict:
         "fake_score": intelligence.fake_score,
         "data_quality_score": intelligence.data_quality_score,
         "recommendation": intelligence.recommendation,
-        "advantages": russian_analysis.get("advantages", intelligence.advantages),
-        "disadvantages": russian_analysis.get("disadvantages", intelligence.disadvantages),
-        "risks": russian_analysis.get("risks", intelligence.risks),
-        "missing_information": russian_analysis.get("missing_information", intelligence.missing_information),
-        "due_diligence_checklist": russian_analysis.get(
+        "advantages": sample.get("advantages", intelligence.advantages),
+        "disadvantages": sample.get("disadvantages", intelligence.disadvantages),
+        "risks": sample.get("risks", intelligence.risks),
+        "missing_information": sample.get("missing_information", intelligence.missing_information),
+        "due_diligence_checklist": sample.get(
             "due_diligence_checklist",
             intelligence.due_diligence_checklist,
         ),
-        "short_summary": russian_analysis.get("short_summary", intelligence.short_summary),
+        "short_summary": sample.get("short_summary", intelligence.short_summary),
+        "market_signal": sample.get("market_signal", "данных недостаточно"),
+        "score_explanations": sample.get("score_explanations", {}),
+        "photos": sample.get("photos", []),
+        "building_context": sample.get("building_context", {}),
+        "surroundings_context": sample.get("surroundings_context", {}),
+        "traffic_context": sample.get("traffic_context", {}),
+        "competition_context": sample.get("competition_context", {}),
+        "nearby_sale_comparables": sample.get("nearby_sale_comparables", []),
+        "sale_comparables_summary": sample.get("sale_comparables_summary", {}),
+        "nearby_rental_rates": sample.get("nearby_rental_rates", []),
+        "rental_rates_summary": sample.get("rental_rates_summary", {}),
+        "district_market_trends": sample.get("district_market_trends", {}),
+        "residential_market_context": sample.get("residential_market_context", {}),
+        "market_support_summary": sample.get("market_support_summary", {}),
         "explanations": {
             score_name: asdict(explanation)
             for score_name, explanation in intelligence.explanations.items()
@@ -215,7 +836,6 @@ def _build_dashboard_property(listing: NormalizedListing) -> dict:
 
 
 def _sample_listings() -> list[NormalizedListing]:
-    sample_updated_at = datetime(2026, 7, 6, 9, 30, tzinfo=timezone.utc)
     return [
         NormalizedListing(
             source="cian",
@@ -238,9 +858,9 @@ def _sample_listings() -> list[NormalizedListing]:
             electric_power_kw=120,
             electric_power_verified=True,
             repair_condition="quality_repair",
-            photos=["https://example.test/photo-1.jpg"],
+            photos=["placeholder:facade-buy-1"],
             seller_name="Prime Retail Moscow",
-            last_seen_at=sample_updated_at,
+            last_seen_at=SAMPLE_UPDATED_AT,
         ),
         NormalizedListing(
             source="cian",
@@ -262,36 +882,10 @@ def _sample_listings() -> list[NormalizedListing]:
             electric_power_can_be_increased=True,
             electric_power_increase_to_kw=120,
             repair_condition="shell_core",
-            photos=["https://example.test/photo-2.jpg"],
+            photos=["placeholder:facade-watch-1"],
             seller_name="City Retail Broker",
             raw_payload={"exposure_days": 54},
-            last_seen_at=sample_updated_at,
-        ),
-        NormalizedListing(
-            source="cian",
-            source_listing_id="sample-buy-2",
-            source_url="https://example.test/cian/sample-buy-2",
-            title="Торговое помещение с ВкусВилл на первом этаже",
-            address="Москва, район Фили-Давыдково, ул. Минская, 2Ж",
-            latitude=55.7256,
-            longitude=37.4987,
-            price_rub=235_000_000,
-            area_sqm=310,
-            price_per_sqm=758_065,
-            floor=1,
-            total_floors=24,
-            building_year=2020,
-            property_type="retail_premises",
-            tenant_name="ВкусВилл",
-            tenant_type="federal",
-            has_federal_tenant=True,
-            electric_power_kw=95,
-            electric_power_verified=True,
-            repair_condition="quality_repair",
-            photos=["https://example.test/photo-3.jpg"],
-            seller_name="Инвест Ритейл",
-            raw_payload={"exposure_days": 21},
-            last_seen_at=sample_updated_at,
+            last_seen_at=SAMPLE_UPDATED_AT,
         ),
         NormalizedListing(
             source="cian",
@@ -309,6 +903,6 @@ def _sample_listings() -> list[NormalizedListing]:
             repair_condition="none",
             photos=[],
             raw_payload={"exposure_days": 130},
-            last_seen_at=sample_updated_at,
+            last_seen_at=SAMPLE_UPDATED_AT,
         ),
     ]

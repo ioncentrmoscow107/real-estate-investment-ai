@@ -45,6 +45,14 @@ cd ..
 .\scripts\start_backend.ps1
 ```
 
+Для надежного запуска в Windows PowerShell используйте вариант с обходом политики только для этой команды:
+
+```powershell
+powershell -ExecutionPolicy Bypass -File .\scripts\start_backend.ps1
+```
+
+Скрипт сам проверяет `.venv\Scripts\python.exe`. Если `.venv` отсутствует, он создаст окружение командой `python -m venv .venv`. Если внутри `.venv` нет `uvicorn`, скрипт установит backend-зависимости из `requirements.txt`.
+
 Прямая команда без скрипта:
 
 ```powershell
@@ -60,6 +68,14 @@ cd ..
 ```powershell
 .\scripts\start_frontend.ps1
 ```
+
+Для надежного запуска в Windows PowerShell используйте вариант с обходом политики только для этой команды:
+
+```powershell
+powershell -ExecutionPolicy Bypass -File .\scripts\start_frontend.ps1
+```
+
+Скрипт проверяет `node`, `npm.cmd` и папку `frontend/node_modules`. Если `node_modules` отсутствует, он выполнит `npm.cmd install`, а затем запустит `npm.cmd run dev`.
 
 Прямая команда без скрипта:
 

@@ -46,13 +46,13 @@ For stable Windows local development, use the guide in
 Start backend without activating the virtual environment:
 
 ```powershell
-.\scripts\start_backend.ps1
+powershell -ExecutionPolicy Bypass -File .\scripts\start_backend.ps1
 ```
 
 Start frontend with `npm.cmd`:
 
 ```powershell
-.\scripts\start_frontend.ps1
+powershell -ExecutionPolicy Bypass -File .\scripts\start_frontend.ps1
 ```
 
 Local URLs:

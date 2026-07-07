@@ -6,30 +6,67 @@ $NodeModulesPath = Join-Path $RepoRoot "frontend\node_modules"
 
 Set-Location $RepoRoot
 
-Write-Host "Проверка локального окружения" -ForegroundColor Cyan
+function Write-Check {
+    param(
+        [string]$Name,
+        [bool]$Ok,
+        [string]$Details = "",
+        [string]$Fix = ""
+    )
+
+    if ($Ok) {
+        Write-Host "[OK] $Name $Details" -ForegroundColor Green
+    } else {
+        Write-Host "[MISSING] $Name $Details" -ForegroundColor Yellow
+        if ($Fix) {
+            Write-Host "  Fix: $Fix" -ForegroundColor DarkYellow
+        }
+    }
+}
+
+Write-Host "Local environment check" -ForegroundColor Cyan
 Write-Host ""
 
-Write-Host "Python:"
-python --version
+if (Get-Command python -ErrorAction SilentlyContinue) {
+    $PythonVersion = & python --version 2>$null
+    Write-Check "Python" ($LASTEXITCODE -eq 0) $PythonVersion "Install Python and make sure it is available in PATH."
+} else {
+    Write-Check "Python" $false "" "Install Python and make sure it is available in PATH."
+}
 
-Write-Host ""
-Write-Host "Node.js:"
-node --version
+$VenvExists = Test-Path -LiteralPath $PythonPath
+Write-Check "venv Python" $VenvExists $PythonPath "Run: python -m venv .venv"
 
-Write-Host ""
-Write-Host "npm.cmd:"
-npm.cmd --version
+if ($VenvExists) {
+    & $PythonPath -c "import uvicorn" 2>$null
+    Write-Check "uvicorn in .venv" ($LASTEXITCODE -eq 0) "" "Run: .\.venv\Scripts\python.exe -m pip install -r requirements.txt"
+} else {
+    Write-Check "uvicorn in .venv" $false "" "Create .venv first, then install requirements.txt."
+}
 
-Write-Host ""
-Write-Host ".venv Python найден: $(Test-Path -LiteralPath $PythonPath)"
-Write-Host "frontend/node_modules найден: $(Test-Path -LiteralPath $NodeModulesPath)"
+if (Get-Command node -ErrorAction SilentlyContinue) {
+    $NodeVersion = & node -v 2>$null
+    Write-Check "Node.js" ($LASTEXITCODE -eq 0) $NodeVersion "Install Node.js and make sure node is available in PATH."
+} else {
+    Write-Check "Node.js" $false "" "Install Node.js and make sure node is available in PATH."
+}
+
+if (Get-Command npm.cmd -ErrorAction SilentlyContinue) {
+    $NpmVersion = & npm.cmd -v 2>$null
+    Write-Check "npm.cmd" ($LASTEXITCODE -eq 0) $NpmVersion "Install Node.js/npm or use npm.cmd from PowerShell."
+} else {
+    Write-Check "npm.cmd" $false "" "Install Node.js/npm or use npm.cmd from PowerShell."
+}
+
+$NodeModulesExists = Test-Path -LiteralPath $NodeModulesPath
+Write-Check "frontend/node_modules" $NodeModulesExists $NodeModulesPath "Run: cd frontend; npm.cmd install"
 
 Write-Host ""
 foreach ($Port in @(8000, 3000)) {
     $Connection = Get-NetTCPConnection -LocalPort $Port -State Listen -ErrorAction SilentlyContinue
     if ($Connection) {
-        Write-Host "Порт $Port занят. Закройте старый процесс или выберите другой порт." -ForegroundColor Yellow
+        Write-Host "[BUSY] Port $Port is already in use." -ForegroundColor Yellow
     } else {
-        Write-Host "Порт $Port свободен." -ForegroundColor Green
+        Write-Host "[OK] Port $Port is free." -ForegroundColor Green
     }
 }

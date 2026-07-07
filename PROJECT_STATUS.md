@@ -6,7 +6,7 @@ This file is the project control panel. Keep it updated after each meaningful sp
 
 0.1.0
 
-Current milestone: TASK-007 Local Dev Environment Stabilization.
+Current milestone: TASK-007A Local Run Scripts Bootstrap Hotfix.
 
 ## Completed Sprints
 
@@ -18,18 +18,18 @@ Current milestone: TASK-007 Local Dev Environment Stabilization.
 - TASK-005: Russian Investor Dashboard UX v2.
 - TASK-006: Property & Market Intelligence v1.
 - TASK-007: Local Dev Environment Stabilization.
+- TASK-007A: Local Run Scripts Bootstrap Hotfix.
 
 ## Current Sprint
 
-TASK-007: Local Dev Environment Stabilization.
+TASK-007A: Local Run Scripts Bootstrap Hotfix.
 
 Focus:
 
-- Stabilize Windows local development without changing product logic.
-- Start backend without PowerShell venv activation.
-- Start frontend with `npm.cmd`.
-- Document local URLs, tests, common port issues, and Git troubleshooting.
-- Keep generated/runtime files out of commits.
+- Fix PowerShell script console encoding by using ASCII script output.
+- Make `scripts/start_backend.ps1` create `.venv` if missing and install backend requirements when `uvicorn` is absent.
+- Make `scripts/start_frontend.ps1` install frontend dependencies when `frontend/node_modules` is absent.
+- Keep product logic, dashboard UI, and sample data unchanged.
 
 ## Completed Features
 
@@ -81,6 +81,10 @@ Focus:
 - Russian local run guide in `docs/local-run.md`.
 - README local development section with backend/frontend commands and URLs.
 - `.gitignore` coverage for Python caches, pytest cache, frontend build/runtime folders, local env files, and OS metadata.
+- TASK-007A hotfix for local run scripts:
+  - backend script bootstraps missing `.venv` and backend dependencies;
+  - frontend script bootstraps missing `frontend/node_modules`;
+  - environment check reports Python, venv Python, uvicorn, Node, npm.cmd, node_modules, and ports.
 
 ## Known Issues
 
@@ -97,6 +101,7 @@ Focus:
 - Property Intelligence rule explanations remain in English internally; the investor-facing dashboard displays Russian sample analysis text.
 - `docs/data-acquisition.md` says no background scheduler for that milestone, while the current FastAPI app starts the scheduler service on lifespan. The active collectors are stubs, so this does not currently collect real data.
 - Windows PowerShell may block `.venv\Scripts\Activate.ps1`; direct `.venv\Scripts\python.exe` commands are documented.
+- Windows PowerShell may block direct `.ps1` execution; use `powershell -ExecutionPolicy Bypass -File ...` as documented.
 - Working tree may contain generated/runtime files locally:
   - backend `__pycache__/` directories;
   - `frontend/.next/`;
@@ -123,7 +128,7 @@ Focus:
 
 ## Last Commit
 
-Pending local commit: `Stabilize local development environment`
+Pending local commit: `Fix local run scripts bootstrap`
 
 Branch: `main`
 

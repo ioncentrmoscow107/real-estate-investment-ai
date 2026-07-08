@@ -27,6 +27,7 @@ import type {
   MarketTrend,
   Recommendation,
 } from "../lib/api";
+import { ProfileFilterWorkspace } from "./ProfileFilterWorkspace";
 
 type ScoreKey =
   | "investment_score"
@@ -721,7 +722,7 @@ function ManualIntakePanel({ batches }: { batches: ManualIntakeBatch[] }) {
 
 export default async function Dashboard() {
   const dashboard = await getDashboardProperties();
-  const { summary, properties, manual_intake_batches } = dashboard;
+  const { summary, properties, manual_intake_batches, search_profiles, intake_funnels } = dashboard;
 
   return (
     <div className="page">
@@ -744,6 +745,8 @@ export default async function Dashboard() {
           <KpiCard icon={<BarChart3 size={20} />} label="Средний инвестиционный рейтинг" value={formatScore(summary.average_investment_score)} />
           <KpiCard icon={<ShieldAlert size={20} />} label="Средний риск" value={formatScore(summary.average_risk_score)} />
         </section>
+
+        <ProfileFilterWorkspace properties={properties} profiles={search_profiles} intakeFunnels={intake_funnels} />
 
         <ManualIntakePanel batches={manual_intake_batches} />
 

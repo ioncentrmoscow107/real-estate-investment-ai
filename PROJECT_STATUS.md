@@ -6,7 +6,7 @@ This file is the project control panel. Keep it updated after each meaningful sp
 
 0.1.0
 
-Current milestone: Manual Listing Intake concept.
+Current milestone: TASK-008B Flexible Search Profiles and Dashboard Filters.
 
 ## Completed Sprints
 
@@ -20,17 +20,18 @@ Current milestone: Manual Listing Intake concept.
 - TASK-007: Local Dev Environment Stabilization.
 - TASK-007A: Local Run Scripts Bootstrap Hotfix.
 - Manual Listing Intake / Manual Analysis Batch concept.
+- TASK-008B: Flexible Search Profiles and Dashboard Filters.
 
 ## Current Sprint
 
-Manual Listing Intake / Manual Analysis Batch concept.
+TASK-008B: Flexible Search Profiles and Dashboard Filters.
 
 Focus:
 
-- Add a mock-only manual URL intake concept without real URL parsing.
-- Show manual batches separately from automatically collected dashboard properties.
-- Mark manual intake source explicitly as `manual`.
-- Document intake modes: search profile, location, source/platform, and manual URL batch.
+- Add multiple flexible sample search profiles.
+- Add a dashboard profile selector and flexible filter panel.
+- Filter current sample properties without scraping or real URL parsing.
+- Show filter result summary and intake funnel for the active profile.
 
 ## Completed Features
 
@@ -90,6 +91,10 @@ Focus:
   - sample `manual_intake_batch` and `manual_listing_url` data;
   - dashboard section for `Ручная подборка`;
   - documentation in `docs/listing-intake-strategy.md`.
+- Flexible search profile concept:
+  - predefined profiles for commercial 100-400M, small premises under 30M, offices 30-150M, tenant-income properties, and custom filtering;
+  - dashboard filter panel with price, price per sqm, area, floor, location, source, category, deal type, recommendation, score, risk, data quality, tenant, yield, power, building year, photo, missing-info, and market-support controls;
+  - filter result summary and profile-specific intake funnel.
 
 ## Known Issues
 
@@ -100,6 +105,7 @@ Focus:
 - Real market data is still sample/mock.
 - Real scraping is not implemented.
 - Manual URL parsing is not implemented; manual intake is currently sample/mock only.
+- Search profiles and filters currently run on sample properties only.
 - Photos are CSS/sample placeholders, not real listing photos.
 - No frontend sorting or filtering in Dashboard v2.
 - No full property analysis detail page.
@@ -134,7 +140,7 @@ Focus:
 
 ## Last Commit
 
-Pending local commit: `Add manual listing intake concept`
+Pending local commit: `Add flexible search profiles and filters`
 
 Branch: `main`
 

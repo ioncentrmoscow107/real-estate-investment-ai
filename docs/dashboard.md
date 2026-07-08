@@ -1,3 +1,26 @@
+# Dashboard v4 - Flexible Search Profiles and Filters
+
+Dashboard now includes a sample-only flexible search profile and filter workspace. The detailed Russian notes for this panel live in `docs/dashboard-filters.md`.
+
+Supported predefined profiles:
+
+- `Коммерция 100–400 млн`;
+- `Малые помещения до 30 млн`;
+- `Офисы 30–150 млн`;
+- `Помещения с арендаторами`;
+- `Пользовательский профиль`.
+
+Selecting a profile updates filter defaults. Filters run only on current sample properties and do not start scraping or real URL parsing.
+
+The dashboard shows:
+
+- filter result summary;
+- shown count;
+- total in selected profile;
+- hidden by filters;
+- `Покупать` / `Изучить подробнее` / `Не рекомендую` counts;
+- intake funnel for the active profile.
+
 # Dashboard v1
 
 ## Назначение

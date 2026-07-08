@@ -148,6 +148,13 @@ img {
   padding: 18px;
 }
 
+.filter-workspace {
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: 18px;
+}
+
 .toolbar {
   align-items: flex-end;
   display: flex;
@@ -750,6 +757,201 @@ li {
   padding: 8px;
 }
 
+.profile-layout {
+  display: grid;
+  gap: 16px;
+  grid-template-columns: minmax(260px, 0.8fr) minmax(360px, 1.2fr);
+}
+
+.profile-selector,
+.funnel-card,
+.filtered-card,
+.empty-filter-state {
+  background: var(--panel-soft);
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: 14px;
+}
+
+.profile-selector label,
+.filter-grid label {
+  display: grid;
+  gap: 6px;
+}
+
+.profile-selector label span,
+.filter-grid label span {
+  color: var(--muted);
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.profile-selector select,
+.filter-grid input,
+.filter-grid select {
+  background: #ffffff;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  color: var(--foreground);
+  font: inherit;
+  min-height: 38px;
+  padding: 8px 10px;
+  width: 100%;
+}
+
+.profile-selector p {
+  color: var(--muted);
+  font-size: 13px;
+  line-height: 1.45;
+  margin: 10px 0 0;
+}
+
+.funnel-card {
+  display: grid;
+  gap: 12px;
+}
+
+.funnel-card h2,
+.funnel-card h3,
+.filtered-card h2 {
+  margin: 0;
+}
+
+.funnel-card h2,
+.filtered-card h2 {
+  font-size: 16px;
+}
+
+.funnel-card h3 {
+  color: var(--muted);
+  font-size: 12px;
+}
+
+.funnel-grid,
+.breakdown-grid,
+.filter-summary,
+.filtered-metrics {
+  display: grid;
+  gap: 8px;
+}
+
+.funnel-grid {
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+}
+
+.breakdown-grid {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.funnel-grid span,
+.breakdown-grid span,
+.filter-summary span,
+.filtered-metrics span {
+  background: #ffffff;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  color: var(--muted);
+  font-size: 12px;
+  line-height: 1.3;
+  padding: 9px;
+}
+
+.funnel-grid strong,
+.filter-summary strong {
+  color: var(--foreground);
+  display: block;
+  font-size: 16px;
+  margin-bottom: 2px;
+}
+
+.breakdown-grid div {
+  display: grid;
+  gap: 7px;
+}
+
+.filter-grid {
+  display: grid;
+  gap: 10px;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+}
+
+.filter-wide {
+  grid-column: span 2;
+}
+
+.filter-toggles {
+  align-items: center;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.filter-toggles label {
+  align-items: center;
+  background: var(--panel-soft);
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  display: inline-flex;
+  font-size: 13px;
+  gap: 7px;
+  min-height: 38px;
+  padding: 8px 10px;
+}
+
+.filter-summary {
+  grid-template-columns: repeat(6, minmax(0, 1fr));
+}
+
+.filtered-list {
+  display: grid;
+  gap: 10px;
+}
+
+.filtered-card {
+  align-items: center;
+  display: grid;
+  gap: 12px;
+  grid-template-columns: minmax(240px, 1fr) auto minmax(420px, 1fr);
+}
+
+.filtered-card p {
+  color: var(--muted);
+  font-size: 13px;
+  line-height: 1.4;
+  margin: 5px 0 0;
+}
+
+.filtered-metrics {
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+}
+
+.filtered-metrics span {
+  color: var(--foreground);
+  text-align: center;
+}
+
+.empty-filter-state {
+  align-items: center;
+  color: var(--muted);
+  display: flex;
+  gap: 8px;
+}
+
+.reset-filters {
+  align-items: center;
+  background: var(--panel-soft);
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  color: var(--accent);
+  display: inline-flex;
+  font: inherit;
+  font-weight: 700;
+  gap: 8px;
+  justify-self: start;
+  min-height: 38px;
+  padding: 8px 12px;
+}
+
 @media (max-width: 1080px) {
   .summary-grid {
     grid-template-columns: repeat(3, minmax(0, 1fr));
@@ -757,12 +959,16 @@ li {
 
   .compact-card,
   .photo-strip,
-  .manual-intake-grid {
+  .manual-intake-grid,
+  .profile-layout,
+  .filtered-card {
     grid-template-columns: 1fr;
   }
 
   .fact-grid,
-  .score-grid {
+  .score-grid,
+  .filter-grid,
+  .filter-summary {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
@@ -783,7 +989,10 @@ li {
   .score-explanations,
   .explanation-columns,
   .two-columns,
-  .trend-grid {
+  .trend-grid,
+  .funnel-grid,
+  .breakdown-grid,
+  .filtered-metrics {
     grid-template-columns: 1fr;
   }
 
@@ -815,8 +1024,14 @@ li {
   .fact-grid,
   .score-grid,
   .photo-thumbs,
-  .comparable-row {
+  .comparable-row,
+  .filter-grid,
+  .filter-summary {
     grid-template-columns: 1fr;
+  }
+
+  .filter-wide {
+    grid-column: span 1;
   }
 
   .brand strong {

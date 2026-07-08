@@ -4,7 +4,13 @@ from app.services.dashboard_samples import get_sample_dashboard_properties
 def test_dashboard_sample_response_structure() -> None:
     response = get_sample_dashboard_properties()
 
-    assert set(response.keys()) == {"summary", "properties", "manual_intake_batches"}
+    assert set(response.keys()) == {
+        "summary",
+        "properties",
+        "manual_intake_batches",
+        "search_profiles",
+        "intake_funnels",
+    }
     assert response["summary"]["total_properties"] == len(response["properties"])
     assert response["summary"]["total_properties"] > 0
     assert 0 <= response["summary"]["average_investment_score"] <= 100
@@ -19,6 +25,17 @@ def test_dashboard_sample_response_structure() -> None:
         "price_rub",
         "area_sqm",
         "price_per_sqm",
+        "floor",
+        "building_year",
+        "property_type",
+        "search_profile_ids",
+        "district",
+        "metro",
+        "property_category",
+        "deal_type",
+        "tenant_exists",
+        "rent_yield_percent",
+        "market_support_level",
         "electric_power_kw",
         "electric_power_increase_to_kw",
         "repair_condition",
@@ -89,6 +106,63 @@ def test_dashboard_sample_response_structure() -> None:
         assert isinstance(property_item["district_market_trends"], dict)
         assert isinstance(property_item["residential_market_context"], dict)
         assert isinstance(property_item["market_support_summary"], dict)
+        assert isinstance(property_item["search_profile_ids"], list)
+        assert property_item["deal_type"] in {"sale", "rent"}
+        assert property_item["property_category"]
+
+
+def test_search_profiles_and_intake_funnels_are_present() -> None:
+    response = get_sample_dashboard_properties()
+    profiles = response["search_profiles"]
+    profile_names = {profile["name"] for profile in profiles}
+
+    assert profile_names == {
+        "Коммерция 100–400 млн",
+        "Малые помещения до 30 млн",
+        "Офисы 30–150 млн",
+        "Помещения с арендаторами",
+        "Пользовательский профиль",
+    }
+
+    required_filter_keys = {
+        "price_min",
+        "price_max",
+        "price_per_sqm_min",
+        "price_per_sqm_max",
+        "area_min",
+        "area_max",
+        "floor_min",
+        "floor_max",
+        "first_floor_only",
+        "location_query",
+        "source",
+        "property_category",
+        "deal_type",
+        "recommendation",
+        "investment_score_min",
+        "risk_max",
+        "data_quality_min",
+        "tenant_exists",
+        "federal_tenant_only",
+        "rent_yield_min",
+        "electric_power_min",
+        "building_year_min",
+        "only_with_photos",
+        "only_with_missing_information",
+        "market_support_level",
+    }
+
+    for profile in profiles:
+        assert required_filter_keys == set(profile["default_filters"].keys())
+        assert profile["id"] in response["intake_funnels"]
+        funnel = response["intake_funnels"][profile["id"]]
+        assert funnel["active_profile_id"] == profile["id"]
+        assert "source_breakdown" in funnel
+        assert "location_breakdown" in funnel
+
+    assert any("small-premises-under-30m" in item["search_profile_ids"] for item in response["properties"])
+    assert any("offices-30-150m" in item["search_profile_ids"] for item in response["properties"])
+    assert any("tenant-income" in item["search_profile_ids"] for item in response["properties"])
 
 
 def test_manual_intake_batches_are_present() -> None:

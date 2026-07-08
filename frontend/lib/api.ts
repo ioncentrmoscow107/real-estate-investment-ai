@@ -206,6 +206,52 @@ export type ManualIntakeBatch = {
   linked_search_profile_id: string | null;
 };
 
+export type ProfileFilterDefaults = {
+  price_min: number | null;
+  price_max: number | null;
+  price_per_sqm_min: number | null;
+  price_per_sqm_max: number | null;
+  area_min: number | null;
+  area_max: number | null;
+  floor_min: number | null;
+  floor_max: number | null;
+  first_floor_only: boolean;
+  location_query: string;
+  source: string;
+  property_category: string;
+  deal_type: string;
+  recommendation: Recommendation | "any";
+  investment_score_min: number;
+  risk_max: number;
+  data_quality_min: number;
+  tenant_exists: boolean;
+  federal_tenant_only: boolean;
+  rent_yield_min: number | null;
+  electric_power_min: number | null;
+  building_year_min: number | null;
+  only_with_photos: boolean;
+  only_with_missing_information: boolean;
+  market_support_level: string;
+};
+
+export type SearchProfile = {
+  id: string;
+  name: string;
+  description: string;
+  is_custom: boolean;
+  default_filters: ProfileFilterDefaults;
+};
+
+export type IntakeFunnel = {
+  active_profile_id: string;
+  last_run: string | null;
+  next_run: string | null;
+  refresh_interval_minutes: number;
+  max_listings_per_source: number;
+  source_breakdown: Record<string, number>;
+  location_breakdown: Record<string, number>;
+};
+
 export type DashboardProperty = {
   id: string;
   source: string;
@@ -215,6 +261,17 @@ export type DashboardProperty = {
   price_rub: number;
   area_sqm: number;
   price_per_sqm: number;
+  floor: number | null;
+  building_year: number | null;
+  property_type: string;
+  search_profile_ids: string[];
+  district: string | null;
+  metro: string | null;
+  property_category: string;
+  deal_type: string;
+  tenant_exists: boolean;
+  rent_yield_percent: number | null;
+  market_support_level: string;
   electric_power_kw: number | null;
   electric_power_increase_to_kw: number | null;
   repair_condition: string | null;
@@ -261,6 +318,8 @@ export type DashboardResponse = {
   };
   properties: DashboardProperty[];
   manual_intake_batches: ManualIntakeBatch[];
+  search_profiles: SearchProfile[];
+  intake_funnels: Record<string, IntakeFunnel>;
 };
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL ?? "http://localhost:8000";

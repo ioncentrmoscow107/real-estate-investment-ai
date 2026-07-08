@@ -6,7 +6,7 @@ This file is the project control panel. Keep it updated after each meaningful sp
 
 0.1.0
 
-Current milestone: TASK-008B Flexible Search Profiles and Dashboard Filters.
+Current milestone: TASK-009 Editable Property Data, Manual Overrides & Deal Workflow v1.
 
 ## Completed Sprints
 
@@ -21,17 +21,18 @@ Current milestone: TASK-008B Flexible Search Profiles and Dashboard Filters.
 - TASK-007A: Local Run Scripts Bootstrap Hotfix.
 - Manual Listing Intake / Manual Analysis Batch concept.
 - TASK-008B: Flexible Search Profiles and Dashboard Filters.
+- TASK-009: Editable Property Data, Manual Overrides & Deal Workflow v1.
 
 ## Current Sprint
 
-TASK-008B: Flexible Search Profiles and Dashboard Filters.
+TASK-009: Editable Property Data, Manual Overrides & Deal Workflow v1.
 
 Focus:
 
-- Add multiple flexible sample search profiles.
-- Add a dashboard profile selector and flexible filter panel.
-- Filter current sample properties without scraping or real URL parsing.
-- Show filter result summary and intake funnel for the active profile.
+- Add sample manual overrides and correction history.
+- Add deal workflow status and next action to every sample property.
+- Add requested document checklist examples.
+- Keep the task sample/UI-only without persistence or real editing.
 
 ## Completed Features
 
@@ -95,6 +96,11 @@ Focus:
   - predefined profiles for commercial 100-400M, small premises under 30M, offices 30-150M, tenant-income properties, and custom filtering;
   - dashboard filter panel with price, price per sqm, area, floor, location, source, category, deal type, recommendation, score, risk, data quality, tenant, yield, power, building year, photo, missing-info, and market-support controls;
   - filter result summary and profile-specific intake funnel.
+- Property workflow and manual overrides concept:
+  - manual overrides for corrected/verified property fields;
+  - correction history for audit-style change display;
+  - workflow status and next action for every sample property;
+  - requested document checklist in expanded property cards.
 
 ## Known Issues
 
@@ -106,6 +112,7 @@ Focus:
 - Real scraping is not implemented.
 - Manual URL parsing is not implemented; manual intake is currently sample/mock only.
 - Search profiles and filters currently run on sample properties only.
+- Property workflow, overrides, and documents are sample/UI-only; no persistence or real editing yet.
 - Photos are CSS/sample placeholders, not real listing photos.
 - No frontend sorting or filtering in Dashboard v2.
 - No full property analysis detail page.
@@ -140,7 +147,7 @@ Focus:
 
 ## Last Commit
 
-Pending local commit: `Add flexible search profiles and filters`
+Pending local commit: `Add property workflow and manual overrides concept`
 
 Branch: `main`
 

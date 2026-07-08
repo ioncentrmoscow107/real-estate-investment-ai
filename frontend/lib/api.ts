@@ -252,6 +252,44 @@ export type IntakeFunnel = {
   location_breakdown: Record<string, number>;
 };
 
+export type ManualOverride = {
+  label: string;
+  original_value: string;
+  override_value: string;
+  source: string;
+  comment: string;
+  updated_at: string;
+};
+
+export type CorrectionHistoryItem = {
+  field: string;
+  label: string;
+  old_value: string;
+  new_value: string;
+  source: string;
+  comment: string;
+  changed_at: string;
+};
+
+export type PropertyWorkflowStatus =
+  | "new"
+  | "interesting"
+  | "in_review"
+  | "documents_requested"
+  | "egrn_check"
+  | "negotiation"
+  | "price_negotiation"
+  | "rejected"
+  | "archived"
+  | "deal_pipeline";
+
+export type RequestedDocument = {
+  title: string;
+  status: "received" | "requested" | "missing" | "not_required";
+  status_label: string;
+  comment: string;
+};
+
 export type DashboardProperty = {
   id: string;
   source: string;
@@ -272,6 +310,12 @@ export type DashboardProperty = {
   tenant_exists: boolean;
   rent_yield_percent: number | null;
   market_support_level: string;
+  manual_overrides?: Record<string, ManualOverride>;
+  correction_history?: CorrectionHistoryItem[];
+  property_workflow_status?: PropertyWorkflowStatus;
+  property_workflow_status_label?: string;
+  workflow_next_action?: string;
+  requested_documents?: RequestedDocument[];
   electric_power_kw: number | null;
   electric_power_increase_to_kw: number | null;
   repair_condition: string | null;

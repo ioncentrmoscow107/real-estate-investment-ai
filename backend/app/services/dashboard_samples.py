@@ -366,6 +366,193 @@ PROPERTY_FILTER_METADATA: dict[str, dict[str, Any]] = {
 }
 
 
+PROPERTY_WORKFLOW_DATA: dict[str, dict[str, Any]] = {
+    "sample-buy-1": {
+        "property_workflow_status": "negotiation",
+        "property_workflow_status_label": "Переговоры",
+        "workflow_next_action": "Получить подтверждение ставки аренды и запросить договор аренды.",
+        "manual_overrides": {
+            "price_rub": {
+                "label": "Цена",
+                "original_value": "180 000 000 ₽",
+                "override_value": "168 000 000 ₽",
+                "source": "Переговоры с собственником",
+                "comment": "Собственник подтвердил готовность обсуждать дисконт при быстром выходе на сделку.",
+                "updated_at": "2026-07-08T14:30:00+03:00",
+            },
+            "electric_power_kw": {
+                "label": "Электрическая мощность",
+                "original_value": "120 кВт",
+                "override_value": "150 кВт",
+                "source": "Технические условия",
+                "comment": "Получено предварительное подтверждение возможности увеличения мощности.",
+                "updated_at": "2026-07-08T15:20:00+03:00",
+            },
+        },
+        "correction_history": [
+            {
+                "field": "price_rub",
+                "label": "Цена",
+                "old_value": "180 000 000 ₽",
+                "new_value": "168 000 000 ₽",
+                "source": "Переговоры с собственником",
+                "comment": "Собственник готов к торгу.",
+                "changed_at": "2026-07-08T14:30:00+03:00",
+            },
+            {
+                "field": "electric_power_kw",
+                "label": "Электрическая мощность",
+                "old_value": "120 кВт",
+                "new_value": "150 кВт",
+                "source": "Технические условия",
+                "comment": "Подтверждена возможность увеличения мощности.",
+                "changed_at": "2026-07-08T15:20:00+03:00",
+            },
+        ],
+        "requested_documents": [
+            {
+                "title": "Выписка ЕГРН",
+                "status": "received",
+                "status_label": "Получено",
+                "comment": "Нужно проверить ограничения и обременения.",
+            },
+            {
+                "title": "Договор аренды",
+                "status": "requested",
+                "status_label": "Запрошено",
+                "comment": "Критично для подтверждения доходности.",
+            },
+            {
+                "title": "Технические условия по электричеству",
+                "status": "received",
+                "status_label": "Получено",
+                "comment": "Проверить стоимость увеличения мощности.",
+            },
+        ],
+    },
+    "sample-watch-1": {
+        "property_workflow_status": "documents_requested",
+        "property_workflow_status_label": "Запрошены документы",
+        "workflow_next_action": "Получить планировку, подтверждение мощности и расчет CAPEX на отделку.",
+        "manual_overrides": {
+            "area_sqm": {
+                "label": "Площадь",
+                "original_value": "190 м²",
+                "override_value": "184 м²",
+                "source": "План БТИ",
+                "comment": "По плану полезная площадь меньше, чем указано в объявлении.",
+                "updated_at": "2026-07-08T13:10:00+03:00",
+            },
+            "repair_condition": {
+                "label": "Состояние ремонта",
+                "original_value": "Shell&core",
+                "override_value": "Требуется CAPEX на отделку",
+                "source": "Комментарий брокера",
+                "comment": "Нужен отдельный бюджет на fit-out и инженерные работы.",
+                "updated_at": "2026-07-08T13:35:00+03:00",
+            },
+        },
+        "correction_history": [
+            {
+                "field": "area_sqm",
+                "label": "Площадь",
+                "old_value": "190 м²",
+                "new_value": "184 м²",
+                "source": "План БТИ",
+                "comment": "Уточнена полезная площадь.",
+                "changed_at": "2026-07-08T13:10:00+03:00",
+            },
+            {
+                "field": "repair_condition",
+                "label": "Состояние ремонта",
+                "old_value": "Shell&core",
+                "new_value": "Требуется CAPEX на отделку",
+                "source": "Комментарий брокера",
+                "comment": "Добавлен риск бюджета отделки.",
+                "changed_at": "2026-07-08T13:35:00+03:00",
+            },
+        ],
+        "requested_documents": [
+            {
+                "title": "План БТИ",
+                "status": "received",
+                "status_label": "Получено",
+                "comment": "Площадь уточнена по плану.",
+            },
+            {
+                "title": "Расчет CAPEX",
+                "status": "requested",
+                "status_label": "Запрошено",
+                "comment": "Нужно понять бюджет отделки.",
+            },
+            {
+                "title": "Технические условия по электричеству",
+                "status": "missing",
+                "status_label": "Нет данных",
+                "comment": "Нужно подтвердить возможность увеличения мощности.",
+            },
+        ],
+    },
+    "sample-avoid-1": {
+        "property_workflow_status": "rejected",
+        "property_workflow_status_label": "Отказ",
+        "workflow_next_action": "Не тратить время до раскрытия адреса, документов и продавца.",
+        "manual_overrides": {},
+        "correction_history": [],
+        "requested_documents": [
+            {
+                "title": "Адрес и правоустанавливающие документы",
+                "status": "missing",
+                "status_label": "Нет данных",
+                "comment": "Без адреса невозможно продолжать due diligence.",
+            }
+        ],
+    },
+    "sample-small-1": {
+        "property_workflow_status": "in_review",
+        "property_workflow_status_label": "В работе",
+        "workflow_next_action": "Проверить арендный поток и срок договора с текущим арендатором.",
+        "manual_overrides": {
+            "lease_rate": {
+                "label": "Арендная ставка",
+                "original_value": "нет данных",
+                "override_value": "210 000 ₽/мес.",
+                "source": "Комментарий продавца",
+                "comment": "Ставка заявлена продавцом, требуется договор аренды.",
+                "updated_at": "2026-07-08T12:50:00+03:00",
+            }
+        },
+        "correction_history": [
+            {
+                "field": "lease_rate",
+                "label": "Арендная ставка",
+                "old_value": "нет данных",
+                "new_value": "210 000 ₽/мес.",
+                "source": "Комментарий продавца",
+                "comment": "Добавлена заявленная арендная ставка.",
+                "changed_at": "2026-07-08T12:50:00+03:00",
+            }
+        ],
+        "requested_documents": [
+            {
+                "title": "Договор аренды",
+                "status": "requested",
+                "status_label": "Запрошено",
+                "comment": "Нужно подтвердить ставку и срок.",
+            }
+        ],
+    },
+    "sample-office-1": {
+        "property_workflow_status": "new",
+        "property_workflow_status_label": "Новый",
+        "workflow_next_action": "Проверить назначение помещения и актуальность цены за м².",
+        "manual_overrides": {},
+        "correction_history": [],
+        "requested_documents": [],
+    },
+}
+
+
 SAMPLE_INTELLIGENCE: dict[str, dict[str, Any]] = {
     "sample-buy-1": {
         "advantages": [
@@ -1141,6 +1328,17 @@ def _build_dashboard_property(listing: NormalizedListing) -> dict:
     intelligence = PropertyIntelligenceService().analyze(listing)
     sample = SAMPLE_INTELLIGENCE.get(listing.source_listing_id or "", {})
     metadata = PROPERTY_FILTER_METADATA.get(listing.source_listing_id or "", {})
+    workflow = PROPERTY_WORKFLOW_DATA.get(
+        listing.source_listing_id or "",
+        {
+            "property_workflow_status": "new",
+            "property_workflow_status_label": "Новый",
+            "workflow_next_action": "Проверить исходные данные объявления.",
+            "manual_overrides": {},
+            "correction_history": [],
+            "requested_documents": [],
+        },
+    )
     fallback_score_explanations = {
         score_name: {
             "positive_factors": explanation.explanations,
@@ -1317,6 +1515,12 @@ def _build_dashboard_property(listing: NormalizedListing) -> dict:
         "tenant_exists": metadata.get("tenant_exists", bool(listing.tenant_name)),
         "rent_yield_percent": metadata.get("rent_yield_percent"),
         "market_support_level": metadata.get("market_support_level", "neutral"),
+        "manual_overrides": workflow["manual_overrides"],
+        "correction_history": workflow["correction_history"],
+        "property_workflow_status": workflow["property_workflow_status"],
+        "property_workflow_status_label": workflow["property_workflow_status_label"],
+        "workflow_next_action": workflow["workflow_next_action"],
+        "requested_documents": workflow["requested_documents"],
         "electric_power_kw": listing.electric_power_kw,
         "electric_power_increase_to_kw": listing.electric_power_increase_to_kw,
         "repair_condition": listing.repair_condition,

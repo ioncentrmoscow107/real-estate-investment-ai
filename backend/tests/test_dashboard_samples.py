@@ -36,6 +36,12 @@ def test_dashboard_sample_response_structure() -> None:
         "tenant_exists",
         "rent_yield_percent",
         "market_support_level",
+        "manual_overrides",
+        "correction_history",
+        "property_workflow_status",
+        "property_workflow_status_label",
+        "workflow_next_action",
+        "requested_documents",
         "electric_power_kw",
         "electric_power_increase_to_kw",
         "repair_condition",
@@ -109,6 +115,77 @@ def test_dashboard_sample_response_structure() -> None:
         assert isinstance(property_item["search_profile_ids"], list)
         assert property_item["deal_type"] in {"sale", "rent"}
         assert property_item["property_category"]
+        assert property_item["property_workflow_status"]
+        assert property_item["property_workflow_status_label"]
+        assert property_item["workflow_next_action"]
+        assert isinstance(property_item["manual_overrides"], dict)
+        assert isinstance(property_item["correction_history"], list)
+        assert isinstance(property_item["requested_documents"], list)
+
+
+def test_property_workflow_and_manual_overrides_are_present() -> None:
+    response = get_sample_dashboard_properties()
+    properties = response["properties"]
+
+    assert any(item["manual_overrides"] for item in properties)
+    assert any(item["correction_history"] for item in properties)
+    assert any(item["requested_documents"] for item in properties)
+
+    override_keys = {
+        "label",
+        "original_value",
+        "override_value",
+        "source",
+        "comment",
+        "updated_at",
+    }
+    history_keys = {
+        "field",
+        "label",
+        "old_value",
+        "new_value",
+        "source",
+        "comment",
+        "changed_at",
+    }
+    document_keys = {"title", "status", "status_label", "comment"}
+    workflow_statuses = {
+        "new",
+        "interesting",
+        "in_review",
+        "documents_requested",
+        "egrn_check",
+        "negotiation",
+        "price_negotiation",
+        "rejected",
+        "archived",
+        "deal_pipeline",
+    }
+    document_statuses = {"received", "requested", "missing", "not_required"}
+
+    properties_with_overrides = 0
+    properties_with_documents = 0
+
+    for property_item in properties:
+        assert property_item["property_workflow_status"] in workflow_statuses
+
+        if property_item["manual_overrides"]:
+            properties_with_overrides += 1
+            for override in property_item["manual_overrides"].values():
+                assert override_keys == set(override.keys())
+
+        if property_item["correction_history"]:
+            for history_item in property_item["correction_history"]:
+                assert history_keys == set(history_item.keys())
+
+        if property_item["requested_documents"]:
+            properties_with_documents += 1
+            for document in property_item["requested_documents"]:
+                assert document_keys == set(document.keys())
+                assert document["status"] in document_statuses
+
+    assert properties_with_overrides >= 2
+    assert properties_with_documents >= 2
 
 
 def test_search_profiles_and_intake_funnels_are_present() -> None:

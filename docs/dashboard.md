@@ -21,6 +21,20 @@ The dashboard shows:
 - `Покупать` / `Изучить подробнее` / `Не рекомендую` counts;
 - intake funnel for the active profile.
 
+# Dashboard v5 - Property Workflow and Manual Overrides
+
+Expanded property cards now include `Уточнения и статус сделки`.
+
+This sample-only section shows:
+
+- workflow status;
+- next recommended action;
+- manual overrides with original value and corrected value;
+- correction history;
+- requested documents and document status.
+
+The section is display-only for now. There is no database persistence, real edit form, authentication, or document upload yet. The full concept is documented in `docs/property-workflow.md`.
+
 # Dashboard v1
 
 ## Назначение

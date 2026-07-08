@@ -28,6 +28,7 @@ import type {
   Recommendation,
 } from "../lib/api";
 import { ProfileFilterWorkspace } from "./ProfileFilterWorkspace";
+import { PropertyWorkflowPanel } from "./PropertyWorkflowPanel";
 
 type ScoreKey =
   | "investment_score"
@@ -440,6 +441,10 @@ function PropertyCard({ property }: { property: DashboardProperty }) {
       </summary>
 
       <div className="property-details">
+        <Section title="Уточнения и статус сделки" icon={<ClipboardCheck size={18} />}>
+          <PropertyWorkflowPanel property={property} />
+        </Section>
+
         <Section title="Инвестиционное заключение" icon={<ClipboardCheck size={18} />}>
           <div className="conclusion">
             <p>{property.short_summary}</p>

@@ -6,7 +6,7 @@ This file is the project control panel. Keep it updated after each meaningful sp
 
 0.1.0
 
-Current milestone: TASK-012 Manual Listing Import.
+Current milestone: TASK-013 Manual Intake Dashboard.
 
 ## Completed Sprints
 
@@ -24,17 +24,17 @@ Current milestone: TASK-012 Manual Listing Import.
 - TASK-009: Editable Property Data, Manual Overrides & Deal Workflow v1.
 - TASK-010: Codex Git Workflow Setup.
 - TASK-011: Stabilization & Integration Readiness.
+- TASK-012: Manual Listing Import API.
 
 ## Current Sprint
 
-TASK-012 / Manual Listing Import
+TASK-013 / Manual Intake Dashboard
 
 Focus:
 
-- Define a durable API contract for manually submitted listing URLs.
-- Validate supported source URLs without bypassing login, captcha, or anti-bot protection.
-- Track manual intake batches and per-URL processing status.
-- Connect accepted manual inputs to the existing normalization and analysis pipeline.
+- Connect the dashboard manual intake form to the persisted API.
+- Show saved batches, validation errors, and request progress.
+- Keep browser requests compatible with local and Docker environments.
 
 ## Completed Features
 

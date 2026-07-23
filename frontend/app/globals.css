@@ -655,18 +655,81 @@ li {
 }
 
 .manual-form button {
+  gap: 8px;
   align-items: center;
   background: var(--accent);
   border: 0;
   border-radius: 8px;
   color: #ffffff;
-  cursor: default;
+  cursor: pointer;
   display: inline-flex;
   font: inherit;
   font-weight: 700;
   justify-content: center;
   min-height: 42px;
   padding: 10px 14px;
+}
+
+.manual-form button:disabled,
+.manual-refresh:disabled {
+  cursor: wait;
+  opacity: 0.65;
+}
+
+.manual-feedback {
+  align-items: center;
+  display: flex;
+  font-size: 13px;
+  gap: 7px;
+  line-height: 1.4;
+  margin: 0;
+}
+
+.manual-feedback-error {
+  color: var(--danger);
+}
+
+.manual-feedback-success {
+  color: var(--good);
+}
+
+.manual-list-head {
+  align-items: center;
+  display: flex;
+  justify-content: space-between;
+}
+
+.manual-refresh {
+  align-items: center;
+  background: #ffffff;
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  color: var(--foreground);
+  cursor: pointer;
+  display: inline-flex;
+  height: 34px;
+  justify-content: center;
+  width: 34px;
+}
+
+.manual-empty {
+  background: var(--panel-soft);
+  border: 1px dashed var(--line);
+  border-radius: 8px;
+  color: var(--muted);
+  margin: 0;
+  padding: 20px;
+  text-align: center;
+}
+
+.manual-spin {
+  animation: manual-spin 0.8s linear infinite;
+}
+
+@keyframes manual-spin {
+  to {
+    transform: rotate(360deg);
+  }
 }
 
 .manual-batch-card {

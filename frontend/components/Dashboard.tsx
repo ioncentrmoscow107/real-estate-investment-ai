@@ -19,6 +19,7 @@ import {
 } from "lucide-react";
 import type { ReactNode } from "react";
 import { getDashboardProperties } from "../lib/api";
+import ManualIntakeWorkspace from "./ManualIntakeWorkspace";
 import type {
   DashboardProperty,
   InvestorScoreExplanation,
@@ -629,6 +630,13 @@ function PropertyCard({ property }: { property: DashboardProperty }) {
 }
 
 function ManualIntakePanel({ batches }: { batches: ManualIntakeBatch[] }) {
+  const persistedIntakeEnabled =
+    process.env.NEXT_PUBLIC_MANUAL_INTAKE_ENABLED !== "false";
+
+  if (persistedIntakeEnabled) {
+    return <ManualIntakeWorkspace />;
+  }
+
   return (
     <section className="dashboard-panel manual-panel">
       <div className="toolbar">

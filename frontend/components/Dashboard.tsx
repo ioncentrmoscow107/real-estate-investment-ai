@@ -133,32 +133,6 @@ function yesNo(value: boolean) {
   return value ? "Да" : "Нет";
 }
 
-function repairLabel(value: DashboardProperty["repair_condition"]) {
-  if (value === "quality_repair" || value === "has_repair") {
-    return "Готовое состояние";
-  }
-  if (value === "shell_core") {
-    return "Shell&core";
-  }
-  if (value === "none" || value === "no_repair" || value === "needs_repair") {
-    return "Требуется ремонт";
-  }
-  return "Нет данных";
-}
-
-function powerLabel(property: DashboardProperty) {
-  if (!property.electric_power_kw) {
-    return "Нет данных";
-  }
-
-  const base = `${formatNumber(property.electric_power_kw)} кВт`;
-  if (!property.electric_power_increase_to_kw) {
-    return base;
-  }
-
-  return `${base}, увеличение до ${formatNumber(property.electric_power_increase_to_kw)} кВт`;
-}
-
 function trendLabel(trend: MarketTrend) {
   const arrow = trend.change_percent > 0 ? "↑" : trend.change_percent < 0 ? "↓" : "→";
   return `${arrow} ${formatPercent(trend.change_percent)} за ${trend.period}`;

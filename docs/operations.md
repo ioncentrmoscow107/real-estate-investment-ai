@@ -8,6 +8,10 @@ Start everything:
 docker compose up --build
 ```
 
+Before the backend starts, the `db-migrate` service applies every SQL file from
+`database/migrations` in filename order. The migrations are idempotent, so this
+also updates an existing local PostgreSQL volume without deleting its data.
+
 Backend health:
 
 ```bash

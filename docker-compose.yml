@@ -17,6 +17,28 @@ services:
       timeout: 5s
       retries: 5
 
+  db-migrate:
+    image: postgres:16-alpine
+    container_name: cre-ai-db-migrate
+    environment:
+      PGHOST: db
+      PGDATABASE: ${POSTGRES_DB:-cre_ai}
+      PGUSER: ${POSTGRES_USER:-cre_ai}
+      PGPASSWORD: ${POSTGRES_PASSWORD:-cre_ai_password}
+    depends_on:
+      db:
+        condition: service_healthy
+    volumes:
+      - ./database/migrations:/migrations:ro
+    command:
+      - sh
+      - -c
+      - |
+        for file in /migrations/*.sql; do
+          echo "Applying $${file}"
+          psql -v ON_ERROR_STOP=1 -f "$${file}"
+        done
+
   backend:
     build:
       context: .
@@ -28,8 +50,8 @@ services:
     ports:
       - "${BACKEND_PORT:-8000}:8000"
     depends_on:
-      db:
-        condition: service_healthy
+      db-migrate:
+        condition: service_completed_successfully
     volumes:
       - ./backend:/app/backend
       - ./ai:/app/ai

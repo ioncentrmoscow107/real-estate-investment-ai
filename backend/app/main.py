@@ -7,6 +7,7 @@ from app.api.routes.collectors import router as collectors_router
 from app.api.routes.dashboard import router as dashboard_router
 from app.api.routes.health import router as health_router
 from app.api.routes.listings import router as listings_router
+from app.api.routes.manual_intake import router as manual_intake_router
 from app.core.config import settings
 from app.services.scheduler import scheduler_service
 
@@ -34,5 +35,6 @@ app.add_middleware(
 
 app.include_router(health_router)
 app.include_router(listings_router, prefix="/api/v1")
+app.include_router(manual_intake_router, prefix="/api/v1")
 app.include_router(collectors_router, prefix="/api/v1")
 app.include_router(dashboard_router, prefix="/api/v1")

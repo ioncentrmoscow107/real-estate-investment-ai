@@ -6,7 +6,7 @@ This file is the project control panel. Keep it updated after each meaningful sp
 
 0.1.0
 
-Current milestone: TASK-009 Editable Property Data, Manual Overrides & Deal Workflow v1.
+Current milestone: TASK-012 Manual Listing Import.
 
 ## Completed Sprints
 
@@ -22,17 +22,19 @@ Current milestone: TASK-009 Editable Property Data, Manual Overrides & Deal Work
 - Manual Listing Intake / Manual Analysis Batch concept.
 - TASK-008B: Flexible Search Profiles and Dashboard Filters.
 - TASK-009: Editable Property Data, Manual Overrides & Deal Workflow v1.
+- TASK-010: Codex Git Workflow Setup.
+- TASK-011: Stabilization & Integration Readiness.
 
 ## Current Sprint
 
-TASK-009: Editable Property Data, Manual Overrides & Deal Workflow v1.
+TASK-012 / Manual Listing Import
 
 Focus:
 
-- Add sample manual overrides and correction history.
-- Add deal workflow status and next action to every sample property.
-- Add requested document checklist examples.
-- Keep the task sample/UI-only without persistence or real editing.
+- Define a durable API contract for manually submitted listing URLs.
+- Validate supported source URLs without bypassing login, captcha, or anti-bot protection.
+- Track manual intake batches and per-URL processing status.
+- Connect accepted manual inputs to the existing normalization and analysis pipeline.
 
 ## Completed Features
 
@@ -101,6 +103,12 @@ Focus:
   - correction history for audit-style change display;
   - workflow status and next action for every sample property;
   - requested document checklist in expanded property cards.
+- TASK-011 stabilization:
+  - Dashboard API route-level contract coverage;
+  - Next.js 15.5.21 and aligned ESLint dependencies;
+  - zero known npm audit vulnerabilities after dependency overrides;
+  - source-only ESLint workflow;
+  - scheduler documentation aligned with FastAPI lifecycle behavior.
 
 ## Known Issues
 
@@ -118,23 +126,19 @@ Focus:
 - No full property analysis detail page.
 - OpenAI package and prompt assets exist, but current scoring/intelligence is deterministic and does not call OpenAI.
 - Property Intelligence rule explanations remain in English internally; the investor-facing dashboard displays Russian sample analysis text.
-- `docs/data-acquisition.md` says no background scheduler for that milestone, while the current FastAPI app starts the scheduler service on lifespan. The active collectors are stubs, so this does not currently collect real data.
 - Windows PowerShell may block `.venv\Scripts\Activate.ps1`; direct `.venv\Scripts\python.exe` commands are documented.
 - Windows PowerShell may block direct `.ps1` execution; use `powershell -ExecutionPolicy Bypass -File ...` as documented.
 - Working tree may contain generated/runtime files locally:
   - backend `__pycache__/` directories;
   - `frontend/.next/`;
   - `frontend/node_modules/`.
-- `frontend/next-env.d.ts` has a local generated comment change.
 
 ## Next Tasks
 
-- After environment stabilization, plan real source ingestion / CIAN adapter / data ingestion validation.
-- Decide the next data source path:
-  - official API;
-  - partner feed;
-  - permitted public pages;
-  - manual or semi-automatic import.
+- Implement manual or semi-automatic listing URL intake as the first compliant real-data path.
+- Define validation and processing statuses for manual intake batches.
+- Connect accepted manual listings to normalization and deterministic analysis.
+- Keep official API, partner feed, and permitted public pages as future source options.
 - Plan validation for real property and market intelligence inputs.
 - Decide how to ingest compliant photos, building data, comparables, rent rates, and trend data.
 - Connect dashboard to persisted analyzed properties when the backend has a durable analysis store.
@@ -142,16 +146,15 @@ Focus:
 - Add a full property analysis view.
 - Localize rule explanation text if those explanations become visible in the UI.
 - Add operational logging and job metrics before enabling real collection.
-- Clarify scheduler behavior in docs versus runtime.
-- Expand tests around dashboard API contracts and frontend data assumptions.
+- Expand tests around manual intake API contracts and processing states.
 
 ## Last Commit
 
-Pending local commit: `Add property workflow and manual overrides concept`
+Latest merged commit: `2efc43d TASK-011: stabilize dashboard API and frontend dependencies`
 
-Branch: `main`
+Branch: `task-012-manual-listing-import`
 
-Remote tracking: `origin/main`
+Remote tracking: not configured yet
 
 ## Repository Structure
 
@@ -236,7 +239,7 @@ Status: complete for v3 sample-data UX.
 
 ### Phase 5: Stabilization
 
-Status: current / next.
+Status: complete.
 
 - Clean generated artifacts from working tree.
 - Confirm `.gitignore` coverage.
@@ -245,9 +248,9 @@ Status: current / next.
 
 ### Phase 6: Real Data Path
 
-Status: planned.
+Status: current.
 
-- Select compliant source access method.
+- Implement manual or semi-automatic URL intake as the first compliant source path.
 - Implement one approved source integration.
 - Add operational logging, metrics, retries, and rate limiting.
 - Persist normalized and analyzed properties.

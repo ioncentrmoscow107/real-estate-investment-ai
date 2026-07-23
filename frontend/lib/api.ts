@@ -189,13 +189,15 @@ export type ManualListingUrl = {
   status: ManualIntakeStatus;
   error_message: string | null;
   created_at: string;
+  updated_at: string;
 };
 
 export type ManualIntakeBatch = {
   id: string;
   name: string;
-  description: string;
+  description: string | null;
   created_at: string;
+  updated_at: string;
   status: ManualIntakeStatus;
   urls: ManualListingUrl[];
   total_urls: number;
@@ -366,7 +368,10 @@ export type DashboardResponse = {
   intake_funnels: Record<string, IntakeFunnel>;
 };
 
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL ?? "http://localhost:8000";
+const API_BASE_URL =
+  process.env.API_BASE_URL ??
+  process.env.NEXT_PUBLIC_API_BASE_URL ??
+  "http://localhost:8000";
 
 async function fetchJson<T>(path: string): Promise<T> {
   const response = await fetch(`${API_BASE_URL}${path}`, {

@@ -109,6 +109,12 @@ Focus:
   - zero known npm audit vulnerabilities after dependency overrides;
   - source-only ESLint workflow;
   - scheduler documentation aligned with FastAPI lifecycle behavior.
+- TASK-012 manual listing intake API:
+  - persisted manual intake batches and listing URLs;
+  - safe source detection for CIAN, Avito, Domclick, and Yandex Realty;
+  - queued and failed per-URL processing states;
+  - PostgreSQL migration for batch and URL storage;
+  - API contracts for create, list, and batch detail operations.
 
 ## Known Issues
 
@@ -118,7 +124,8 @@ Focus:
 - Property & Market Intelligence v1 uses sample/mock market data, not real external market data.
 - Real market data is still sample/mock.
 - Real scraping is not implemented.
-- Manual URL parsing is not implemented; manual intake is currently sample/mock only.
+- Manual URL parsing is not implemented; the backend persists and queues real URLs,
+  while the dashboard still shows sample intake batches.
 - Search profiles and filters currently run on sample properties only.
 - Property workflow, overrides, and documents are sample/UI-only; no persistence or real editing yet.
 - Photos are CSS/sample placeholders, not real listing photos.
@@ -136,8 +143,9 @@ Focus:
 ## Next Tasks
 
 - Implement manual or semi-automatic listing URL intake as the first compliant real-data path.
-- Define validation and processing statuses for manual intake batches.
-- Connect accepted manual listings to normalization and deterministic analysis.
+- Connect the dashboard manual intake panel to the persisted API.
+- Implement an approved processor that maps queued URLs to normalized listing payloads.
+- Connect normalized manual listings to deterministic analysis.
 - Keep official API, partner feed, and permitted public pages as future source options.
 - Plan validation for real property and market intelligence inputs.
 - Decide how to ingest compliant photos, building data, comparables, rent rates, and trend data.
@@ -150,11 +158,11 @@ Focus:
 
 ## Last Commit
 
-Latest merged commit: `2efc43d TASK-011: stabilize dashboard API and frontend dependencies`
+Pending local commit: `TASK-012: implement manual listing intake API`
 
 Branch: `task-012-manual-listing-import`
 
-Remote tracking: not configured yet
+Remote tracking: `origin/task-012-manual-listing-import`
 
 ## Repository Structure
 
